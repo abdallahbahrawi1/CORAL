@@ -23,20 +23,20 @@ app.use(cors({
 }));
 
 app.use(express.json())
-app.use('/images',express.static('./src/Images'))
-app.use('/Images',express.static('./src/Images'))
-app.use('/Images',express.static('./src/images'))
+// app.use('/images',express.static('./src/Images'))
+// app.use('/Images',express.static('./src/Images'))
+// app.use('/Images',express.static('./src/images'))
 
-app.use('/users', usersRoute);
-app.use('/addresses', addressesRoute);
-app.use('/reviews',checkSessionId,reviewsRoute);
-app.use('/products', productRoute);
-app.use('/category', categoryRoute);
-app.use('/brand', brandRoute);
-app.use('/search-suggestions', searchSuggestionsRoute);
-app.use('/wishlist',checkSessionId, wishlistRoute);
+// app.use('/users', usersRoute);
+// app.use('/addresses', addressesRoute);
+// app.use('/reviews',checkSessionId,reviewsRoute);
+// app.use('/products', productRoute);
+// app.use('/category', categoryRoute);
+// app.use('/brand', brandRoute);
+// app.use('/search-suggestions', searchSuggestionsRoute);
+// app.use('/wishlist',checkSessionId, wishlistRoute);
 app.use('/orders', ordersRoute);
-app.use('/shopping-cart', shoppingCartRoute);
+// app.use('/shopping-cart', shoppingCartRoute);
 
 
 

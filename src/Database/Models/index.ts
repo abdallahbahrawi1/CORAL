@@ -1,32 +1,32 @@
-// const dbConfig = require('../config/dbConfig.ts');
+const dbConfig = require('../config/dbConfig.ts');
 import { Sequelize, DataTypes, Dialect } from 'sequelize';
 
-// const sequelize = new Sequelize(
-//     dbConfig.DB,
-//     dbConfig.USER,
-//     dbConfig.PASSWORD, {
-//         host: dbConfig.HOST,
-//         dialect: dbConfig.dialect as Dialect,
-//         define: { timestamps: false },
-//         pool: {
-//             max: dbConfig.pool.max,
-//             min: dbConfig.pool.min,
-//         },
-//     }
-// );
-export const sequelize = new Sequelize(
-    process.env.mysql_database as string||"coral_store",
-    process.env.mysql_username as string||"root",
-    process.env.mysql_password||"12345678",
-    {
-      host: process.env.mysql_host||"localhost",
-      dialect: "mysql",
-      pool: {
-        max: 10,
-        min: 1,
-      },
+const sequelize = new Sequelize(
+    dbConfig.DB,
+    dbConfig.USER,
+    dbConfig.PASSWORD, {
+        host: dbConfig.HOST,
+        dialect: dbConfig.dialect as Dialect,
+        define: { timestamps: false },
+        pool: {
+            max: dbConfig.pool.max,
+            min: dbConfig.pool.min,
+        },
     }
-  );
+);
+// export const sequelize = new Sequelize(
+//     process.env.mysql_database as string||"coral_store",
+//     process.env.mysql_username as string||"root",
+//     process.env.mysql_password||"12345678",
+//     {
+//       host: process.env.mysql_host||"localhost",
+//       dialect: "mysql",
+//       pool: {
+//         max: 10,
+//         min: 1,
+//       },
+//     }
+//   );
   
 sequelize.authenticate()
     .then(() => {
@@ -102,12 +102,12 @@ db.categories.hasMany(db.products, { foreignKey:{ name: 'category_id', allowNull
 
 //order relations
 db.orders.hasMany(db.ordersItems, { foreignKey:{ name: 'order_id', allowNull: false }});
-db.orders.belongsTo(db.addresses, { foreignKey:{ name: 'address_id', allowNull: false }});
+db.orders.belongsTo(db.addresses, { foreignKey:{ name: 'address_id', allowNull: true }});
 
 // db.orders.hasOne(db.ordersRecipients, { foreignKey:{ name: 'order_id', allowNull: false }});
 
 db.ordersItems.belongsTo(db.orders, { foreignKey:{ name: 'order_id', allowNull: false }});
-db.addresses.hasMany(db.orders, { foreignKey:{ name: 'address_id', allowNull: false }});
+db.addresses.hasMany(db.orders, { foreignKey:{ name: 'address_id', allowNull: true }});
 
 // db.ordersRecipients.belongsTo(db.orders, { foreignKey:{ name: 'order_id', allowNull: false }});
 

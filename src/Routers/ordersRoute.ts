@@ -1,8 +1,10 @@
-import express from 'express';
-// import {} from '../Controllers/orderController';
-const router = express.Router();
+import express, { Router } from 'express';
+import { placeOrder } from '../Controllers/orderController';
+import {checkSessionId} from '../Controllers/userController';
 
-router.get('/', );
+const router: Router = express.Router();
 
+//Endpoint to place an order to a user 
+router.post('/', checkSessionId, placeOrder);
 
-export default router
+export default router;
