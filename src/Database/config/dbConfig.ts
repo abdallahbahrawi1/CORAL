@@ -1,6 +1,6 @@
 module.exports = {
     HOST: 'localhost',
-    USER: 'fadih',
+    USER: 'root',
     PASSWORD: 'root',
     DB: 'coral',
     dialect: 'mysql',
