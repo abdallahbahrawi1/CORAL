@@ -1,5 +1,4 @@
 const db = require('../Database/Models/index.ts');
-
 interface IProduct {
     id: number;
     name: string;
@@ -9,7 +8,6 @@ interface IProduct {
     price: number;
     stock_quantity: number;
 }
-  
 interface IOrder {
     id: number;
     order_number: number;
@@ -18,7 +16,6 @@ interface IOrder {
     status: string;
     payment_method: string;
 }
-
 interface IDiscount {
     id: number;
     percentage: number;
@@ -26,7 +23,6 @@ interface IDiscount {
     end_date: string;
     is_valid: boolean;
 }
-
 interface IOrderItems {
     id: number;
     price: number;
@@ -36,25 +32,40 @@ interface IOrderItems {
     product_id: number;
     order_id: number;
 }
+interface Product {
+  name: string;
+  sub_title: string;
+  price: number;
+  discount: number;
+  quantity: number;
+  sub_total: number;
+  product_id: string;
+}
 
 const generateOrderNumber = async () => {
-    let orderNumber: string = generateRandomOrderNumber();
-    let checkOrderNumber = await db.orders.findOne({
-        where:{
-            order_number: orderNumber
-        }
-    });
+  let orderNumber: string = generateRandomOrderNumber();
+  let checkOrderNumber = await db.orders.findOne({
+      where:{
+          order_number: orderNumber
+      }
+  });
 
-    while(checkOrderNumber){
-        orderNumber = generateRandomOrderNumber()
-        checkOrderNumber = await db.orders.findOne({
-            where:{
-                order_number: orderNumber
-            }
-        });
-    }
+  while(checkOrderNumber){
+      orderNumber = generateRandomOrderNumber()
+      checkOrderNumber = await db.orders.findOne({
+          where:{
+              order_number: orderNumber
+          }
+      });
+  }
 
-    return orderNumber;
+  return orderNumber;
+}
+
+function generateRandomOrderNumber() {
+  const randomNumber = Math.floor(Math.random() * 1000000000);
+  const randomString = `#${String(randomNumber).padStart(9, '0')}`;
+  return randomString;
 }
 
 export const createOrder = async (userID: number,transaction = null) => {
@@ -74,11 +85,6 @@ export const createOrder = async (userID: number,transaction = null) => {
     }
 };
 
-function generateRandomOrderNumber() {
-    const randomNumber = Math.floor(Math.random() * 1000000000);
-    const randomString = `#${String(randomNumber).padStart(9, '0')}`;
-    return randomString;
-}
 
 export const processOrderItem = async (item: IOrderItems, newOrder: IOrder, transaction = null) => {
     const product = await checkProductExistence(item.product_id, transaction);
@@ -91,11 +97,6 @@ export const processOrderItem = async (item: IOrderItems, newOrder: IOrder, tran
 
     await createOrderItem(product, newOrder, quantity, transaction);
 };
-
-// const discount = await getProductDiscount(product.id, transaction);
-// const priceOfProductAfterDiscount = calculatePriceAfterDiscount(product, discount);
-// totalPrice += priceOfProductAfterDiscount * quantity;
-// these can be used to measure the total amount of the order items with the discount
 
 const checkProductExistence = async (productId: number, transaction = null) => {
     const product = await db.products.findOne({
@@ -130,7 +131,7 @@ const updateProductStock = async (product: any, newQuantity: number, transaction
 };
 
 
-export const getProductDiscount = async (productId: number, transaction = null) => {
+const getProductDiscount = async (productId: number, transaction = null) => {
     return await db.discounts.findOne({
       where: {
         id: productId,
@@ -166,18 +167,122 @@ export const updateOrderTotalAmount = async (newOrder: any, totalPrice: number, 
     }
 };
 
-// export const getUserIdFromSession = async (session: string) => {
-//     console.log("asdsad")
-//     const userSession = await db.sessions.findOne({ where: { session } });
-//     if (!userSession) {
-//         throw new Error('Session not found');
-//     }
-//     const id = userSession.user_id; // get the user id from the session
-//     const user = await db.users.findOne({ where: { id } });
-//     if (!user) {
-//         throw new Error('User not found');
-//     }
-//     const userID = id
-//     // console.log("asdsad")
-//     return userID
-// }
+export const getOrderById = async (orderId: number) => {
+  const order = await db.orders.findOne({
+      where: {
+      id: orderId,
+      },
+  });
+
+  if (!order) {
+    throw new Error(`order with ID ${orderId} not found.`);
+  }
+  return order;
+};
+
+export const getOrderItems = async (orderId) => {
+  try {
+    return await db.ordersItems.findAll({
+      where: {
+        order_id: orderId,
+      },
+    });
+  } catch (error: any) {
+    throw new Error(`failed to get the orderItems for order with ID ${orderId}.: ${error.message}`);
+  }
+};
+
+export const getProducts = async (orderItems) => {
+  try {    
+    const products: Product[] = [];
+  
+    for (const item of orderItems) {
+      const product = await getProductById(item.product_id);
+      const discount = await getProductDiscount(product.discount_id);
+      const discountAmount = calculateDiscountAmount(product, discount);  
+      products.push({
+        name: product.name,
+        sub_title: product.sub_title,
+        price: product.price,
+        discount: discountAmount,
+        quantity: item.quantity,
+        sub_total: product.price * item.quantity,
+        product_id: product.product_id,
+      });
+    }
+  
+    return products;
+  } catch (error: any) {
+    throw new Error(`failed to get the products.: ${error.message}`);
+  }
+};
+
+const getProductById = async (productId: number) => {
+  try {
+    return await db.products.findOne({
+      where: {
+        id: productId,
+      },
+    });
+  } catch (error: any) {
+    throw new Error(`failed to get product with ID ${productId}.: ${error.message}`);
+  }
+};
+
+const calculateDiscountAmount = (product, discount) => {
+  if (!discount) {
+    return 0;
+  }
+
+  const isValid = checkDiscountValidity(discount.expiry_date);
+  const discountPercentage = isValid ? discount.percentage / 100 : 0;
+
+  return discountPercentage * product.price;
+};
+
+const checkDiscountValidity = (expiryDate) => {
+  const currentDate = new Date();
+  const formattedCurrentDate = currentDate.toISOString().split('T')[0];
+  return formattedCurrentDate <= expiryDate;
+};
+
+export const getAddressObject = async (order) => {
+  const address = await db.addresses.findOne({
+    where: {
+      id: order.address_id,
+    },
+  });
+
+  if (address) {
+    const user = await db.users.findOne({
+      where: {
+        id: address.user_id,
+      },
+    });
+
+    return {
+      email: user.email,
+      mobile: user.mobile,
+      address_line1: address.address_line1,
+      city: address.city,
+      first_name: address.first_name,
+      last_name: address.last_name,
+    };
+  }
+
+  return {};
+};
+
+export const calculateTotalAmount = (products) => {
+  return products.reduce((total, product) => total + product.price * product.quantity, 0);
+};
+
+export const calculateTotalDiscount = (products) => {
+  return products.reduce((total, product) => total + product.discount, 0);
+};
+
+export const calculateGrandTotal = (products) => {
+  const totalAmount = calculateTotalAmount(products);
+  const totalDiscount = calculateTotalDiscount(products);
+  return totalAmount - totalDiscount;
+};
