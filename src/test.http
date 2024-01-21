@@ -1,9 +1,10 @@
-
-
 GET http://localhost:3000/category
+###
+GET http://localhost:3000/category/handpicked
 ###
 GET http://localhost:3000/brand
 ###
+GET http://localhost:3000/category/top
 
 #############################################
 # USERS
@@ -128,3 +129,5 @@ Authorization:Qyjk2h5rCvfpXb2eoV924vv3M0iQQ8
 }
 
 
+###
+GET http://localhost:3000/products/new-arrivals

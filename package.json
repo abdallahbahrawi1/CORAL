@@ -1,18 +1,1 @@
-{
-  "dependencies": {
-    "bcrypt": "^5.1.1",
-    "cors": "^2.8.5",
-    "express": "^4.18.2",
-    "faker": "^6.6.6",
-    "joi": "^17.11.0",
-    "mysql2": "^3.7.0",
-    "sequelize": "^6.35.2",
-    "tsx": "^4.7.0"
-  },
-  "scripts": {
-    "start": "tsx watch server.ts"
-  },
-  "devDependencies": {
-    "@types/express": "^4.17.21"
-  }
-}
+{"main":"index.ts","dependencies":{"@faker-js/faker":"^8.3.1","bcrypt":"^5.1.1","cors":"^2.8.5","express":"^4.18.2","faker":"^5.5.3","joi":"^17.11.0","mysql2":"^3.7.0","sequelize":"^6.35.2","tsx":"^4.7.0","typescript":"^5.3.3"},"scripts":{"start":"tsx watch index.ts","build":"rm -rf build/ && tsc && cp package.json ./build/ && npm run copy-assets","copy-assets": "ncp src/Images build/src/Images","test":"echo \"Error: no test specified\" && exit 1"},"devDependencies":{"ncp":"^2.0.0"}}
