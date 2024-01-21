@@ -130,7 +130,7 @@ const updateProductStock = async (product: any, newQuantity: number, transaction
 };
 
 
-const getProductDiscount = async (productId: number, transaction = null) => {
+export const getProductDiscount = async (productId: number, transaction = null) => {
     return await db.discounts.findOne({
       where: {
         id: productId,
@@ -138,7 +138,7 @@ const getProductDiscount = async (productId: number, transaction = null) => {
     }, { transaction });
 };
 
-const calculatePriceAfterDiscount = (product: IProduct, discount: IDiscount) => {
+export const calculatePriceAfterDiscount = (product: IProduct, discount: IDiscount) => {
     const productPrice = product.price || 0;
     const discountPercentage = discount?.is_valid ? discount.percentage / 100 : 0;
     return productPrice - (discountPercentage * productPrice);

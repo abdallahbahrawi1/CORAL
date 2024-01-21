@@ -6,3 +6,5 @@ export const placeOrderSchema = Joi.array().items(
     product_id: Joi.number().required().min(1)
   })
 );
+
+export const orderIdSchema = Joi.number().positive()
