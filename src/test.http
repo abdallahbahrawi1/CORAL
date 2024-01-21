@@ -1,9 +1,10 @@
-
-
 GET http://localhost:3000/category
+###
+GET http://localhost:3000/category/handpicked
 ###
 GET http://localhost:3000/brand
 ###
+GET http://localhost:3000/category/top
 
 #############################################
 # USERS
@@ -126,5 +127,35 @@ Authorization:Qyjk2h5rCvfpXb2eoV924vv3M0iQQ8
 {
   "product_id":16
 }
+
+
+###
+GET http://localhost:3000/products/new-arrivals
+
+###
+
+POST   http://localhost:3000/orders
+Content-Type: application/json
+Authorization:d2zih6gwap7ie65c9i3k
+
+
+ [
+  {
+    "product_id": 1,
+    "quantity": 100
+  },
+  {
+    "product_id": 2,
+    "quantity": 200
+  },
+  {
+    "product_id": 3,
+    "quantity": 30
+  },
+  {
+    "product_id": 4,
+    "quantity": 40
+  }
+]
 
 

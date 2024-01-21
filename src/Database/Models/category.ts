@@ -5,6 +5,15 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true,
         },
+        icon: {
+            type: DataTypes.STRING,
+        },
+        image: {
+            type: DataTypes.STRING,
+        },
+        image_mobile:{
+            type: DataTypes.STRING,
+        },
     },{
         timestamps: true,
     });
