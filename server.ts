@@ -5,7 +5,7 @@ import reviewsRoute from './src/Routers/reviewsRoute';
 import productRoute from './src/Routers/productRoute';
 import categoryRoute from './src/Routers/categoryRoute';
 import brandRoute from './src/Routers/brandRoute';
-import searchSuggestionsRoute from './src/Routers/searchSuggestionsRoute';
+import searchRoute from './src/Routers/searchRoute';
 import wishlistRoute from './src/Routers/wishlistRoute';
 import ordersRoute from './src/Routers/ordersRoute';
 import shoppingCartRoute from './src/Routers/shoppingCartRoute';
@@ -33,7 +33,7 @@ app.use('/reviews',checkSessionId,reviewsRoute);
 app.use('/products', productRoute);
 app.use('/category', categoryRoute);
 app.use('/brand', brandRoute);
-app.use('/search-suggestions', searchSuggestionsRoute);
+app.use('/search', searchRoute);
 app.use('/wishlist',checkSessionId, wishlistRoute);
 app.use('/orders', ordersRoute);
 app.use('/shopping-cart', shoppingCartRoute);
@@ -48,4 +48,3 @@ app.listen(port, () => {
 });
 
 
-/// added 

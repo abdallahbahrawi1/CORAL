@@ -159,3 +159,5 @@ Authorization:d2zih6gwap7ie65c9i3k
 ]
 
 
+###
+GET http://localhost:3000/search/suggestions?keyword=ha
