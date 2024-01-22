@@ -41,7 +41,25 @@ interface Product {
   sub_total: number;
   product_id: string;
 }
-
+interface Order {
+  status: string;
+  order_id: number;
+  products: Product[];
+  order_date: string;
+  total_amount: number;
+  total_discount: number;
+  grand_total: number;
+  payment_method: string;
+  addresses: Address;
+}
+interface Address {
+  email?: string;
+  mobile?: string;
+  address_line1?: string;
+  city?: string;
+  first_name?: string;
+  last_name?: string;
+}
 const generateOrderNumber = async () => {
   let orderNumber: string = generateRandomOrderNumber();
   let checkOrderNumber = await db.orders.findOne({
@@ -85,7 +103,6 @@ export const createOrder = async (userID: number,transaction = null) => {
     }
 };
 
-
 export const processOrderItem = async (item: IOrderItems, newOrder: IOrder, transaction = null) => {
     const product = await checkProductExistence(item.product_id, transaction);
     const quantity = item.quantity;
@@ -125,8 +142,8 @@ const updateProductStock = async (product: any, newQuantity: number, transaction
     try {
         product.stock_quantity = newQuantity;
         await product.save({ transaction });
-    } catch (error) {
-        throw new Error(`failed to update product stock with ID ${product.id}.`);
+    } catch (error: any) {
+        throw new Error(`failed to update product stock with ID ${product.id}.:${error.message}`);
     }
 };
 
@@ -180,7 +197,20 @@ export const getOrderById = async (orderId: number) => {
   return order;
 };
 
-export const getOrderItems = async (orderId) => {
+export const getOrdersByUserId = async (userID: number) => {
+  const order = await db.orders.findAll({
+      where: {
+      user_id: userID,
+      },
+  });
+
+  if (!order) {
+    throw new Error(`Cant find orders for user ID ${userID}.`);
+  }
+  return order;
+};
+
+export const getOrderItems = async (orderId: number) => {
   try {
     return await db.ordersItems.findAll({
       where: {
@@ -192,7 +222,7 @@ export const getOrderItems = async (orderId) => {
   }
 };
 
-export const getProducts = async (orderItems) => {
+const getProducts = async (orderItems) => {
   try {    
     const products: Product[] = [];
   
@@ -246,7 +276,7 @@ const checkDiscountValidity = (expiryDate) => {
   return formattedCurrentDate <= expiryDate;
 };
 
-export const getAddressObject = async (order) => {
+const getAddressObject = async (order) => {
   const address = await db.addresses.findOne({
     where: {
       id: order.address_id,
@@ -273,16 +303,83 @@ export const getAddressObject = async (order) => {
   return {};
 };
 
-export const calculateTotalAmount = (products) => {
+const calculateTotalAmount = (products) => {
   return products.reduce((total, product) => total + product.price * product.quantity, 0);
 };
 
-export const calculateTotalDiscount = (products) => {
+const calculateTotalDiscount = (products) => {
   return products.reduce((total, product) => total + product.discount, 0);
 };
 
-export const calculateGrandTotal = (products) => {
+const calculateGrandTotal = (products) => {
   const totalAmount = calculateTotalAmount(products);
   const totalDiscount = calculateTotalDiscount(products);
   return totalAmount - totalDiscount;
+};
+
+export const processOrder =async (order) => {
+  try {
+    let status = order.status;
+    let order_id = order.id;
+    let order_date = order.order_date;
+
+    const orderItems = await getOrderItems(order_id);
+    const products = await getProducts(orderItems);
+    const addressObj = await getAddressObject(order);
+
+    let orderObj: Order = {
+      "status": status,
+      "order_id": order_id,
+      "products": products,
+      "order_date": order_date,
+      "total_amount": calculateTotalAmount(products),
+      "total_discount": calculateTotalDiscount(products),
+      "grand_total": calculateGrandTotal(products),
+      "payment_method": order.payment_method,
+      "addresses": addressObj
+    };
+
+    return orderObj;
+  } catch (error) {
+    throw error; 
+  }
+}
+
+export const addOrderAddress = async (orderId: number, orderValues) => {
+  try {
+    const { email, mobile, location, last_name, first_name } = orderValues.order_address;
+      return await db.addresses.create({
+        first_name: first_name,
+        last_name: last_name,
+        phone: mobile,
+        country: "",
+        city: "",
+        street: "",
+        address_line1: "",
+        address_line2: "",
+        postal_code: "",
+        is_default: false,
+        user_id: orderId
+      });
+  } catch (error: any) {
+      throw new Error(`Failed to add a location for the order: ${error.message}`);
+  }
+};
+
+
+export const returnOrderItem = async (item) => {
+  try {
+    const product = await db.products.findOne({
+      where: {
+        id: item.product_id,
+      }
+    });
+    const quantity = product.stock_quantity;
+    const itemQuantity = item.quantity   
+
+    const newStockQuantity = quantity + itemQuantity;
+    await updateProductStock(product, newStockQuantity);
+  } catch (error: any) {
+      throw new Error(`Failed to return order with ID ${item.order_id}: ${error.message}`);
+  }
 };
