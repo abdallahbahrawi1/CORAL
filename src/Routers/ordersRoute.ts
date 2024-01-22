@@ -7,7 +7,7 @@ const router: Router = express.Router();
 router.post('/', checkSessionId, placeOrder);
 router.get('/', checkSessionId, getUserOrders);
 router.get('/info/:orderId', getOrderInfo);
-router.get('/:orderId', getOrderInfo);
+router.get('/:orderId', getUserOrders);
 router.post('/:orderId', AddOrderLocationAndPayment);
 router.put('/:orderId/cancel', cancelOrder);
 
