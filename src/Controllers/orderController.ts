@@ -1,36 +1,6 @@
-import { addOrderAddress, createOrder, getOrderById, getOrderItems, getOrdersByUserId, processOrder, processOrderItem, returnOrderItem} from '../services/orderService';
-import { placeOrderSchema, orderIdSchema, AddOrderLocationAndPaymentSchema } from '../validators/ordersSchema';
+import { calculateGrandTotal, calculateTotalAmount, calculateTotalDiscount, createOrder, getAddressObject, getOrderById, getOrderItems, getProducts, processOrderItem} from '../services/orderService';
+import { placeOrderSchema, orderIdSchema } from '../validators/ordersSchema';
 const db = require('../Database/Models/index.ts');
-
-
-interface Product {
-  name: string;
-  sub_title: string;
-  price: number;
-  discount: number;
-  quantity: number;
-  sub_total: number;
-  product_id: string;
-}
-interface Address {
-  email?: string;
-  mobile?: string;
-  address_line1?: string;
-  city?: string;
-  first_name?: string;
-  last_name?: string;
-}
-interface Order {
-  status: string;
-  order_id: number;
-  products: Product[];
-  order_date: string;
-  total_amount: number;
-  total_discount: number;
-  grand_total: number;
-  payment_method: string;
-  addresses: Address;
-}
 
 export const placeOrder = async (req, res) => {
   const { error, value } = placeOrderSchema.validate(req.body);
@@ -55,7 +25,7 @@ export const placeOrder = async (req, res) => {
       if (error.message.includes("Insufficient quantity")) {
         error.status = 409;
         res.status(error.status).json({ error: error.message });
-      }else if(error.message.includes("c not found")){
+      }else if(error.message.includes("Session not found")){
         error.status = 403;
         res.status(error.status).json({ error: error.message });
       } else {
@@ -70,76 +40,33 @@ export const getOrderInfo = async (req, res) => {
   if(error){
     return res.status(400).json({ error: error.details[0].message});
   }
+  
   try {
     const order = await getOrderById(value);
-    let orderObj = await processOrder(order);
+
+    let status = order.status;
+    let order_id = order.id;    
+    let order_date = order.order_date;
+
+    const orderItems = await getOrderItems(order_id);
+    const products = await getProducts(orderItems);
+    const addressObj = await getAddressObject(order);    
+
+    let orderObj = {
+      "status": status,
+      "order_id": order_id,
+      "products": products,
+      "order_date": order_date,
+      "total_amount": calculateTotalAmount(products),
+      "total_discount": calculateTotalDiscount(products),
+      "grand_total": calculateGrandTotal(products),
+      "payment_method": order.payment_method,
+      "addresses": addressObj
+    }
     res.status(200).json(orderObj);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 };
-
-export const getUserOrders = async (req, res) => {
-  try {
-    const userID = req.session.user_id;
-    const orders = await getOrdersByUserId(userID);
-
-    const productsDetails: Order[] = [];
-    for(const item of orders){
-      let orderObj: Order = await processOrder(item);
-      productsDetails.push(orderObj)
-    }
-    res.status(200).json(productsDetails);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const AddOrderLocationAndPayment = async (req, res) => {
-  const { error: orderIdError, value: orderId } = orderIdSchema.validate(req.params.orderId);
-  if(orderIdError){
-    return res.status(400).json({ error: orderIdError.details[0].message});
-  }
-  const { error: orderBodyError, value: orderValues } = AddOrderLocationAndPaymentSchema.validate(req.body);
-  if(orderBodyError){
-    return res.status(400).json({ error: orderBodyError.details[0].message});
-  }
-
-  try {
-    const order = await getOrderById(orderId);
-    const orderAddress = await addOrderAddress(orderId, orderValues);
-    await order.update({
-      address_id: orderAddress.id,
-      payment_method: orderValues.payment_method
-    })
-    res.status(200).json(order);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const cancelOrder = async (req, res) => {
-  const { error: orderIdError, value: orderId } = orderIdSchema.validate(req.params.orderId);
-  if(orderIdError){
-    return res.status(400).json({ error: orderIdError.details[0].message});
-  }
-
-  try {
-    const order = await getOrderById(orderId);
-    const orderItems = await getOrderItems(orderId)
-
-    for (const item of orderItems) {
-      await returnOrderItem(item);
-    }
-    
-    await order.update({
-      status: "cancelled"
-    })
-    res.status(200).json(order);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
 
 

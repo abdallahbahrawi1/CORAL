@@ -1,16 +1,11 @@
 import express, { Router } from 'express';
-import { placeOrder, getOrderInfo, getUserOrders, AddOrderLocationAndPayment, cancelOrder} from '../Controllers/orderController';
+import { placeOrder, getOrderInfo} from '../Controllers/orderController';
 import {checkSessionId} from '../Controllers/userController';
 
 const router: Router = express.Router();
 
+//Endpoint to place an order to a user 
 router.post('/', checkSessionId, placeOrder);
-router.get('/', checkSessionId, getUserOrders);
 router.get('/info/:orderId', getOrderInfo);
-router.get('/:orderId', getUserOrders);
-router.post('/:orderId', AddOrderLocationAndPayment);
-router.put('/:orderId/cancel', cancelOrder);
-
-
 
 export default router;

@@ -1,8 +1,13 @@
 GET http://localhost:3000/category
 ###
+GET http://localhost:3000/category/3/products
+
+#####
 GET http://localhost:3000/category/handpicked
 ###
 GET http://localhost:3000/brand
+###
+GET http://localhost:3000/brand/3/products
 ###
 GET http://localhost:3000/category/top
 
@@ -131,7 +136,14 @@ Authorization:Qyjk2h5rCvfpXb2eoV924vv3M0iQQ8
 
 ###
 GET http://localhost:3000/products/new-arrivals
-
+###
+GET http://localhost:3000/products/limited-edition
+###
+GET http://localhost:3000/products/discount-15plus?pageSize=9&page=1
+###
+GET http://localhost:3000/products/popular?pageSize=9&page=3
+###
+GET http://localhost:3000/products?pageSize=9&page=1&sortBy=price-high
 ###
 
 POST   http://localhost:3000/orders
@@ -161,3 +173,6 @@ Authorization:d2zih6gwap7ie65c9i3k
 
 ###
 GET http://localhost:3000/search/suggestions?keyword=ha
+
+###
+GET http://localhost:3000/search?keyword=ca
