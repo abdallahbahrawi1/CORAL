@@ -1,7 +1,7 @@
 // getSearchResults,getSuggestions
 
 import {  Request,Response ,NextFunction} from 'express';
-const db = require('../Database/Models/index');
+import db from '../Database/Models/index';
 import Joi from 'joi'
 
  interface User {

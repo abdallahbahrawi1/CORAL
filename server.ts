@@ -7,10 +7,10 @@ import categoryRoute from './src/Routers/categoryRoute';
 import brandRoute from './src/Routers/brandRoute';
 import searchRoute from './src/Routers/searchRoute';
 import wishlistRoute from './src/Routers/wishlistRoute';
-import ordersRoute from './src/Routers/ordersRoute';
+// import ordersRoute from './src/Routers/ordersRoute';
 import shoppingCartRoute from './src/Routers/shoppingCartRoute';
 
-import {checkSessionId} from './src/Controllers/userController';
+import {checkSessionId} from './src/Middlewares/checkSession';
 
 import cors from 'cors';
 
@@ -23,20 +23,19 @@ app.use(cors({
 }));
 
 app.use(express.json())
-app.use('/images',express.static('./src/Images'))
 app.use('/Images',express.static('./src/Images'))
 app.use('/Images',express.static('./src/images'))
 
 app.use('/users', usersRoute);
-app.use('/addresses', addressesRoute);
+app.use('/addresses',checkSessionId, addressesRoute);
 app.use('/reviews',checkSessionId,reviewsRoute);
 app.use('/products', productRoute);
 app.use('/category', categoryRoute);
 app.use('/brand', brandRoute);
 app.use('/search', searchRoute);
 app.use('/wishlist',checkSessionId, wishlistRoute);
-app.use('/orders', ordersRoute);
-app.use('/shopping-cart', shoppingCartRoute);
+// app.use('/orders',checkSessionId, ordersRoute);
+app.use('/shopping-cart',checkSessionId, shoppingCartRoute);
 
 
 

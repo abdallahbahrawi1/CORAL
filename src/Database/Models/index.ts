@@ -121,4 +121,4 @@ db.sequelize.sync({ alter: true })
         console.error('Error synchronizing the database:', err);
     });
 
-module.exports = db;
+export default db;

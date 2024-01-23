@@ -1,6 +1,6 @@
 import express from 'express';
-import {loginUser,createUser,logoutUser,changePassword,checkSessionId,changeUsername,getUserDetails,updateUserDetails,deleteUserAccount} from '../Controllers/userController';
-
+import {loginUser,createUser,logoutUser,changePassword,changeUsername,getUserDetails,updateUserDetails,deleteUserAccount} from '../Controllers/userController';
+import {checkSessionId} from '../Middlewares/checkSession'
 const router = express.Router();
 router.post('/signin', loginUser);
 router.post('/signup',createUser);
