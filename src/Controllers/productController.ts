@@ -451,7 +451,8 @@ const commonInclude = [
     model: db.productsImages,
     attributes: ['image_url'],
     limit: 1
-  }
+  },
+  
 ];
 
 const commonSortOptions: Record<string, any> = {
@@ -459,7 +460,7 @@ const commonSortOptions: Record<string, any> = {
   'price-low': [['price', 'ASC']],
   ratings: [[db.sequelize.fn('AVG', db.sequelize.col('reviews.rating')), 'DESC']],
   latest: [['createdAt', 'DESC']],
-  popular: [[db.sequelize.fn('AVG', db.sequelize.col('reviews.rating')), 'DESC']]
+  popular: [[db.sequelize.fn('COUNT', db.sequelize.col('orderitems.product_id')), 'DESC']]
 };
 
 const handleRequest = async (req: Request, res: Response, options: ProductQueryOptions) => {
@@ -564,18 +565,73 @@ export const handPickedProducts = async (req: Request, res: Response) => {
     having: db.sequelize.where(db.sequelize.fn('AVG', db.sequelize.col('reviews.rating')), '>', 4.5)
   });
 };
+
+// export const getTrendyProducts = async (req: Request, res: Response) => {
+//   await handleRequest(req, res, {
+//     attributes: [db.sequelize.fn('COUNT', db.sequelize.col('orderitems.product_id')),'buy_count'],
+//     include: [
+//       {
+//         model: db.ordersItems,
+//         attributes: []
+//       }
+//     ],
+//     group: ['id']
+//   });
+// };
+// export const getTrendyProducts = async (req: Request, res: Response) => {
+//   await handleRequest(req, res, {
+//     attributes: [
+//       'id',
+//       [db.sequelize.fn('COUNT', db.sequelize.col('orderitems.product_id')), 'count']
+//     ],
+//     include: [
+//       {
+//         model: db.ordersItems,
+//         attributes: [],
+//         group: ['orderitems.product_id'],
+//       }
+//     ],
+//     group: ['id'],
+    
+//   });
+// };
 export const getTrendyProducts = async (req: Request, res: Response) => {
-  await handleRequest(req, res, {
-    attributes: [db.sequelize.fn('COUNT', db.sequelize.col('orderitems.product_id'))],
-    include: [
-      {
-        model: db.ordersItems,
-        attributes: []
+ try{const sortBy = req.query.sortBy || 'ratings'; // Default to 'popular' if sortBy is not provided
+
+//  const result = await db.ordersItems.findAll({
+//   attributes: [
+//     'product_id',
+//     [db.sequelize.fn('COUNT', db.sequelize.col('*')), 'count'],
+//     [db.sequelize.fn('SUM', db.sequelize.col('quantity')), 'total_quantity']
+//   ],
+//   group: ['product_id'],
+//   order: [[db.sequelize.literal('count'), 'DESC']]
+// });
+const result = await db.products.findAll({
+  attributes: [
+    'id',
+    'name',
+    [db.sequelize.fn('COUNT', db.sequelize.col('orderitems.product_id')), 'count']
+  ],
+  include: [
+    {
+      model: db.ordersItems,
+      attributes: [],
+      required: true,
+      where: {
+        product_id: db.sequelize.col('product_id')
       }
-    ],
-    group: ['id']
-  });
-};
+    }
+  ],
+  group: ['id'],
+  order: [[db.sequelize.literal('count'), 'DESC']]
+});
+  res.status(200).json(result)
+ }
+  catch (error) {
+   console.error(error);
+   return res.status(500).json({ error: 'Internal Server Error' });
+ }}
 
 export const getProductDetails = async (req: Request, res: Response) => {
   try {

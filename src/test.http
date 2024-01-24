@@ -144,11 +144,11 @@ GET http://localhost:3000/products/new-arrivals
 ###
 GET http://localhost:3000/products/limited-edition
 ###
-GET http://localhost:3000/products/discount-15plus?pageSize=9&page=1
+GET http://localhost:3000/products/discount-15plus?pageSize=9&page=4
 ###
 GET http://localhost:3000/products/popular?pageSize=9&page=3
 ###
-GET http://localhost:3000/products?pageSize=9&page=1&sortBy=price-high
+GET http://localhost:3000/products?pageSize=9&page=3&sortBy=price-high
 ###
 
 POST   http://localhost:3000/orders
@@ -181,3 +181,34 @@ GET http://localhost:3000/search/suggestions?keyword=a
 
 ###
 GET http://localhost:3000/search?keyword=ca
+
+###
+GET http://localhost:3000/shopping-cart
+Authorization:xav3bdotvybcjhfl4ux5
+###
+POST   http://localhost:3000/shopping-cart/add
+Content-Type: application/json
+Authorization:xav3bdotvybcjhfl4ux5
+
+ 
+{
+  "product_id": 1,
+  "quantity": 100
+}
+###
+PUT  http://localhost:3000/shopping-cart/update
+Content-Type: application/json
+Authorization:xav3bdotvybcjhfl4ux5
+
+ 
+{
+  "product_id": 1,
+  "quantity": 50
+}
+###
+DELETE  http://localhost:3000/shopping-cart/remove/1
+Authorization:xav3bdotvybcjhfl4ux5
+###
+DELETE  http://localhost:3000/shopping-cart/clear
+Authorization:xav3bdotvybcjhfl4ux5
+###
