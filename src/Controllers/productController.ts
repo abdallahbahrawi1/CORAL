@@ -632,94 +632,15 @@ const result = await db.products.findAll({
    console.error(error);
    return res.status(500).json({ error: 'Internal Server Error' });
  }}
+ import * as productService from '../Services/productService';
 
-export const getProductDetails = async (req: Request, res: Response) => {
+ 
+export const getProductDetails = async (req: Request, res: Response): Promise<void> => {
   try {
-    const result = await db.products.findOne({
-      attributes: [
-        'id',
-        'name',
-        'sub_title',
-        'model',
-        'price',
-        'stock_quantity',
-        'description',
-        [db.sequelize.fn('AVG', db.sequelize.col('reviews.rating')), 'average_rating'],
-        [db.sequelize.fn('COUNT', db.sequelize.col('reviews.rating')), 'rating_count']
-      ],
-      include: [
-        {
-          model: db.reviews,
-          attributes: []
-        },
-        {
-          model: db.discounts,
-          attributes: ['percentage']
-        },
-        // {
-        //   model: db.productsImages,
-        //   attributes: ['image_url'],
-
-        // },
-        {
-          model: db.brands,
-          attributes: ['name']
-        },
-        {
-          model: db.categories,
-          attributes: ['name']
-        }
-      ],
-      where: {
-        id: req.params.product_id
-      },
-      group: ['id']
-    });
-    const result2 = await db.reviews.findAll({
-      where: {
-        product_id: req.params.product_id
-      }
-    });
-    const result3 = await db.productsImages.findAll({
-      where: {
-        product_id: req.params.product_id
-      }
-    });
-    const result4 = await db.products.findAll({
-      where: {
-        id: {
-          [db.Sequelize.Op.not]: req.params.product_id // [Op.ne] stands for "not equal"
-        }
-      },
-      include: [
-        {
-          model: db.reviews,
-          attributes: []
-        },
-        {
-          model: db.discounts,
-          attributes: ['percentage']
-        },
-        {
-          model: db.productsImages,
-          attributes: ['image_url']
-        },
-        {
-          model: db.brands,
-          attributes: ['name']
-        },
-        {
-          model: db.categories,
-          attributes: ['name'],
-          where: {
-            name: result.Category.name
-          }
-        }
-      ]
-    });
-    return res.status(200).json({ result, result2, result3, result4 });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
+    const product = await productService.getProductDetails(req.params.product_id);
+    res.status(200).json(product);
+  } catch (error: any) {
+    const statusCode = error.code || 500;
+    res.status(statusCode).json({ error: error.message });
   }
 };

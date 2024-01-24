@@ -13,7 +13,7 @@ export const getAllBrands = async (_req: Request, res: Response) => {
     }
   };
   
-  export const getProductsByBrand = async (req: Request, res: Response) => {
+export const getProductsByBrand = async (req: Request, res: Response) => {
     try {
       const sortBy = req.query.sortBy || 'ratings'; // Default to 'popular' if sortBy is not provided
 
