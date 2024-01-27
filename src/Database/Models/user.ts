@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             validate: {
                 is: {
-                  args: /^(\d+-?\d+)$/, // Accepts "50559-5895" or "50559"
+                  args: /^(\+\d{1,3}[- ]?)?\d{10}$/, // Accepts "50559-5895" or "50559"
                   msg: 'Invalid phone format. Use "XXXXX-XXXX" or "XXXXX" format.',
                 },
                 len: {

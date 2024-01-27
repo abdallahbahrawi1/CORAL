@@ -13,5 +13,5 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: true,
     });
 
-    return Brand;
+  return Brand;
 };

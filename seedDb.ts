@@ -1,5 +1,5 @@
 
-const db = require('./src/Database/Models/index');
+import db from './src/Database/Models/index';
 const faker = require('faker');
 
 function generateOrderNumber() {
@@ -210,8 +210,8 @@ const generateFakeProducts = (creartedCategories,createdBrands,creartedDiscount)
     sub_title:faker.commerce.productAdjective(),
     model:faker.random.alphaNumeric(8),
     description :faker.commerce.productDescription(), 
-    price :faker.commerce.price(), 
-    stock_quantity :faker.random.number({ min: 0,max:2000}),
+    price :faker.random.number({ min: 1,max:450}), 
+    stock_quantity :faker.random.number({ min: 0,max:1000}),
     discount_id:faker.random.arrayElement(creartedDiscount.map((discount) => discount.id)),
     brand_id :faker.random.arrayElement(createdBrands.map((brand) => brand.id)),
     category_id :faker.random.arrayElement(creartedCategories.map((category) => category.id))
@@ -251,11 +251,28 @@ const generateFakeUser = () => {
     postal_code: faker.address.zipCode(),
     user_id: faker.random.arrayElement(createdUsers).id,
   });
+  const ratingProbabilities = [0.05, 0.1, 0.2, 0.3, 0.35]; // Adjust these probabilities as needed
+
+  // Generate a random rating based on probabilities
+  const getRandomRating = () => {
+    const rand = Math.random();
+    let cumulativeProbability = 0;
+
+    for (let i = 0; i < ratingProbabilities.length; i++) {
+      cumulativeProbability += ratingProbabilities[i];
+      if (rand <= cumulativeProbability) {
+        return i + 1; // Ratings are 1-indexed
+      }
+    }
+
+    // In case of rounding errors or if probabilities don't sum up to 1
+    return ratingProbabilities.length;
+  };
 
   const generateFakeReviews = (createdProducts,createdUsers) => {
     return {
       comment: faker.lorem.sentence(),
-      rating: faker.random.number({ min: 1, max: 5 }),
+      rating: getRandomRating(),
       product_id: faker.random.arrayElement(createdProducts.map((product) => product.id)), 
       user_id:faker.random.arrayElement(createdUsers.map((user) => user.id)),
     };
@@ -273,7 +290,7 @@ const generateFakeUser = () => {
     
   const generateFakeShoppinglist = (createdProducts,createdUsers) => {
     return {
-      quantity:faker.random.number({ min: 1 ,max:100}),
+      quantity:faker.random.number({ min: 1 ,max:50}),
       product_id: faker.random.arrayElement(createdProducts.map((product) => product.id)), 
       user_id:faker.random.arrayElement(createdUsers.map((user) => user.id)),
     };
@@ -294,24 +311,20 @@ const generateFakeUser = () => {
   
     const generateOrderItems = (createdProducts,createdOrders) => {
       return {
-          quantity:faker.random.number({ min: 1, max:100}),
+          quantity:faker.random.number({ min: 1, max:50}),
           price :faker.commerce.price(), 
           product_id: faker.random.arrayElement(createdProducts.map((product) => product.id)),
           order_id: faker.random.arrayElement(createdOrders.map((order) => order.id)),
         }
       };
     const generateFakeSession = (createdUsers) => {
-      // Calculate the expiry date 6 hours from now
-      const expiryDate = new Date();
-      expiryDate.setHours(expiryDate.getHours() + 6);
-  
-      // Format the expiry date as a string in ISO format
-      const formattedExpiryDate = expiryDate.toISOString();
-  
+      const minutesLater = new Date();
+       minutesLater.setMinutes(minutesLater.getMinutes() + 60);
+                 
       return {
           session_key: faker.random.alphaNumeric(20),
           user_id: faker.random.arrayElement(createdUsers.map((user) => user.id)),
-          expiry_date: formattedExpiryDate,
+          expiry_date : minutesLater
       };
   };
   
@@ -336,7 +349,7 @@ const generateFakeUser = () => {
         const createdAdresses = await db.addresses.bulkCreate(fakeAdresses, { returning: true });
 
       // Generate and insert fake data for Products
-      const fakeProducts = Array.from({ length: 400 }, () => generateFakeProducts(createdCategories, createdBrands, creartedDiscount));
+      const fakeProducts = Array.from({ length: 1000 }, () => generateFakeProducts(createdCategories, createdBrands, creartedDiscount));
       const createdProducts = await db.products.bulkCreate(fakeProducts, { returning: true });
       //Generate and insert fake data for Products Images 
       const fakeProductsImages = createdProducts.map((product) => ({
@@ -345,7 +358,7 @@ const generateFakeUser = () => {
       }));
       const createdProductsImages = await db.productsImages.bulkCreate(fakeProductsImages, { returning: true });
       // Generate and insert fake data for Reviews
-      const fakeReviews = Array.from({ length: 1000 }, () => generateFakeReviews(createdProducts, createdUsers));
+      const fakeReviews = Array.from({ length: 10000 }, () => generateFakeReviews(createdProducts, createdUsers));
       const createdReviews = await db.reviews.bulkCreate(fakeReviews, { returning: true });
   
       // Generate and insert fake data for Wishlists
@@ -357,10 +370,10 @@ const generateFakeUser = () => {
       const createdShoppingCarts = await db.shoppingCarts.bulkCreate(fakeShoppingCart, { returning: true });
   
       // Generate and insert fake data for Orders
-      const fakeOrders = Array.from({ length: 100 }, () => generateOrders(createdUsers,createdAdresses));
+      const fakeOrders = Array.from({ length: 150 }, () => generateOrders(createdUsers,createdAdresses));
       const createdOrders = await db.orders.bulkCreate(fakeOrders, { returning: true });
       // Generate and insert fake data for OrderItems
-      const fakeOrderItems = Array.from({ length: 200 }, () => generateOrderItems(createdProducts,createdOrders));
+      const fakeOrderItems = Array.from({ length: 500 }, () => generateOrderItems(createdProducts,createdOrders));
       const createdOrderItems = await db.ordersItems.bulkCreate(fakeOrderItems, { returning: true })
   
       // Generate and insert fake data for Sessions

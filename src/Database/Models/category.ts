@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
         name: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: 'name',
+            unique: "name",
         },
         icon: {
             type: DataTypes.STRING,
@@ -18,5 +18,5 @@ module.exports = (sequelize, DataTypes) => {
         timestamps: true,
     });
 
-    return Category;
+  return Category;
 };

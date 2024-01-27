@@ -1,0 +1,59 @@
+
+#REVIEWS LOCALHOST
+###
+GET http://localhost:3000/reviews
+Authorization:DXAq9VfPtloocEVPsNhO
+###
+POST http://localhost:3000/reviews/4
+Content-Type: application/json
+Authorization:DXAq9VfPtloocEVPsNhO
+
+{
+  "rating":5,
+  "comment":"gtgrgr"
+}
+
+###
+PUT http://localhost:3000/reviews/4
+Content-Type: application/json
+Authorization:DXAq9VfPtloocEVPsNhO
+
+{
+  "rating":1,
+  "comment":"Mh&"
+}
+###
+DELETE http://localhost:3000/reviews/4
+Authorization:DXAq9VfPtloocEVPsNhO
+
+
+
+
+
+
+
+###API
+GET http://158.176.7.102:3000/reviews
+Authorization:m9y5fp0gxfo6yqticdrb
+###
+POST http://158.176.7.102:3000/reviews/7
+Content-Type: application/json
+Authorization:a6fwkhr0gerk2n4iu7wn
+
+{
+  "rating":5,
+  "comment":"gtgrgr"
+}
+
+###
+PUT http://158.176.7.102:3000/reviews/229
+Content-Type: application/json
+Authorization:a6fwkhr0gerk2n4iu7wn
+
+{
+  "rating":1,
+  "comment":"Mh&"
+}
+###
+DELETE http://158.176.7.102:3000/reviews/1
+Authorization:a6fwkhr0gerk2n4iu7wn

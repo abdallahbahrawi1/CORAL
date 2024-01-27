@@ -1,15 +1,22 @@
-
 import { Request, Response } from 'express';
-const db = require('../Database/Models/index');
+import * as brandService from '../Services/brandService';
 
-
-export const getAllBrands = async (_req: Request, res: Response) => {
+export const getAllBrands = async (req: Request, res: Response)=> {
     try {
-      const brands = await db.brands.findAll();
-      return res.status(200).json(brands);
+        const brands = await brandService.getAllBrands();
+        return res.status(200).json(brands);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error2' });
     }
-  };
-  
+};
+
+  export const getTopBrands = async (req: Request, res: Response)=> {
+    try {
+        const brands = await brandService.getTopBrands();
+        return res.status(200).json(brands);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: 'Internal Server Error2' });
+    }
+};

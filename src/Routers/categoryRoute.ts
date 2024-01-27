@@ -7,6 +7,5 @@ router.get('/handpicked', getHandpickedCategories);
 router.get('/top', getTopCategories);
 router.get('/mobile', getMobileCategories);
 
-
 export default router
 

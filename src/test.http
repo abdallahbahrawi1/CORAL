@@ -1,8 +1,13 @@
 GET http://localhost:3000/category
 ###
+GET http://localhost:3000/category/3/products
+
+#####
 GET http://localhost:3000/category/handpicked
 ###
 GET http://localhost:3000/brand
+###
+GET http://localhost:3000/brand/3/products
 ###
 GET http://localhost:3000/category/top
 
@@ -14,7 +19,7 @@ Content-Type: application/json
 
 {
   "username": "tyr",
-  "email": "tre@example.com",
+  "email": "tr4e@example.com",
   "password": "Mh&55r58r55",
   "first_name": "John",
   "last_name": "Doe",
@@ -27,7 +32,7 @@ Content-Type: application/json
 
 {
   "email": "tre@example.com",
-  "password": "Mh&55r58r55444444"
+  "password": "Mh&55r58r55"
 }
 ###
 GET  http://localhost:3000/users/signout 
@@ -35,12 +40,12 @@ Authorization:xgrrkH3vkrfklzBsJ3M3jWcwJUhrhw
 ###
 #INFORMATION
 GET http://localhost:3000/users/53
-Authorization:0LExz9in2mqO43v8eyjD
+Authorization:1X63hhGJXtAvMFNS05ZD
 ###
 #UPDATE INFORMATION
 PUT http://localhost:3000/users/54
 Content-Type: application/json
-Authorization:YrDWOklpKkaWl2OUTcH9lLTk5pacUc
+Authorization:1X63hhGJXtAvMFNS05ZD
 
 {
   "first_name": "ukuukuku",
@@ -53,7 +58,7 @@ Authorization:YrDWOklpKkaWl2OUTcH9lLTk5pacUc
 ###
 PUT  http://localhost:3000/users/change-password
 Content-Type: application/json
-Authorization:vaFvCDICNKX44HOAuX3YqYhVFk1fXO
+Authorization:1X63hhGJXtAvMFNS05ZD
 
 {
   "currentPassword":"Mh&55r58r55",
@@ -74,7 +79,7 @@ Authorization:0LExz9in2mqO43v8eyjD
 #REVIEWS
 POST   http://localhost:3000/reviews/7
 Content-Type: application/json
-Authorization:0LExz9in2mqO43v8eyjD
+Authorization:a6fwkhr0gerk2n4iu7wn
 
 {
   "rating":5,
@@ -83,55 +88,67 @@ Authorization:0LExz9in2mqO43v8eyjD
 
 ###
 
-PUT   http://localhost:3000/reviews/4
+PUT   http://localhost:3000/reviews/229
 Content-Type: application/json
-Authorization:0LExz9in2mqO43v8eyjD
+Authorization:a6fwkhr0gerk2n4iu7wn
 
 {
-  "rating":2,
-  "comment":"Mh&gegegegerg"
+  "rating":1,
+  "comment":"Mh&"
 }
 ###
-DELETE    http://localhost:3000/reviews/7
-Authorization:0LExz9in2mqO43v8eyjD
+DELETE    http://localhost:3000/reviews/1
+Authorization:a6fwkhr0gerk2n4iu7wn
 
 ###
 GET http://localhost:3000/reviews
-Authorization:0LExz9in2mqO43v8eyjD
+Authorization:a6fwkhr0gerk2n4iu7wn
 #######################################################
 
 #WISHLIST
 ####
 GET http://localhost:3000/wishlist
-Authorization:0LExz9in2mqO43v8eyjD
+Authorization:a6fwkhr0gerk2n4iu7wn
 ###
 DELETE  http://localhost:3000/wishlist
 Authorization:0LExz9in2mqO43v8eyjD
 ###
 DELETE  http://localhost:3000/wishlist/product/16
-Authorization:0LExz9in2mqO43v8eyjD
+Authorization:a6fwkhr0gerk2n4iu7wn
 ###
 POST   http://localhost:3000/wishlist/product
 Content-Type: application/json
-Authorization:0LExz9in2mqO43v8eyjD
+Authorization:a6fwkhr0gerk2n4iu7wn
 
 {
-  "product_id":16,
+  "product_id":30,
   "comment":"i like it "
 }
 ###
 POST   http://localhost:3000/wishlist/toggle
 Content-Type: application/json
-Authorization:Qyjk2h5rCvfpXb2eoV924vv3M0iQQ8
+Authorization:a6fwkhr0gerk2n4iu7wn
 
 {
-  "product_id":16
+  "product_id":40
 }
 
-
+###
+GET http://localhost:3000/products/info/4
+###
+GET http://localhost:3000/products/handpicked
+###
+GET http://localhost:3000/products/trendy
 ###
 GET http://localhost:3000/products/new-arrivals
-
+###
+GET http://localhost:3000/products/limited-edition
+###
+GET http://localhost:3000/products/discount-15plus?pageSize=9&page=4
+###
+GET http://localhost:3000/products/popular?pageSize=9&page=3
+###
+GET http://localhost:3000/products?pageSize=9&page=3&sortBy=price-high
 ###
 
 POST   http://localhost:3000/orders
@@ -159,3 +176,39 @@ Authorization:d2zih6gwap7ie65c9i3k
 ]
 
 
+###
+GET http://localhost:3000/search/suggestions?keyword=a
+
+###
+GET http://localhost:3000/search?keyword=fro
+
+###
+GET http://localhost:3000/shopping-cart
+Authorization:xav3bdotvybcjhfl4ux5
+###
+POST   http://localhost:3000/shopping-cart/add
+Content-Type: application/json
+Authorization:xav3bdotvybcjhfl4ux5
+
+ 
+{
+  "product_id": 1,
+  "quantity": 100
+}
+###
+PUT  http://localhost:3000/shopping-cart/update
+Content-Type: application/json
+Authorization:xav3bdotvybcjhfl4ux5
+
+ 
+{
+  "product_id": 1,
+  "quantity": 50
+}
+###
+DELETE  http://localhost:3000/shopping-cart/remove/1
+Authorization:xav3bdotvybcjhfl4ux5
+###
+DELETE  http://localhost:3000/shopping-cart/clear
+Authorization:xav3bdotvybcjhfl4ux5
+###
