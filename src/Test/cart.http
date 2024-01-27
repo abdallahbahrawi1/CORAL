@@ -1,0 +1,68 @@
+### LOCALHOST
+GET http://localhost:3000/shopping-cart
+Authorization:ucwzimuzuqe74870snn7
+###
+POST http://localhost:3000/shopping-cart/add
+Content-Type: application/json
+Authorization:jwkrzaiagw2i22qc4wyo
+
+ 
+{
+  "product_id": 2,
+  "quantity": 100
+}
+###
+PUT http://localhost:3000/shopping-cart/update
+Content-Type: application/json
+Authorization:jwkrzaiagw2i22qc4wyo
+
+ 
+{
+  "product_id": 1,
+  "quantity": 52
+}
+###
+DELETE http://localhost:3000/shopping-cart/remove/1
+Authorization:xav3bdotvybcjhfl4ux5
+###
+DELETE http://localhost:3000/shopping-cart/clear
+Authorization:xav3bdotvybcjhfl4ux5
+###
+
+
+
+
+
+
+
+
+### API
+GET http://158.176.7.102:3000/shopping-cart
+Authorization:xav3bdotvybcjhfl4ux5
+###
+POST http://158.176.7.102:3000/shopping-cart/add
+Content-Type: application/json
+Authorization:xav3bdotvybcjhfl4ux5
+
+ 
+{
+  "product_id": 1,
+  "quantity": 100
+}
+###
+PUT http://158.176.7.102:3000/shopping-cart/update
+Content-Type: application/json
+Authorization:xav3bdotvybcjhfl4ux5
+
+ 
+{
+  "product_id": 1,
+  "quantity": 50
+}
+###
+DELETE http://158.176.7.102:3000/shopping-cart/remove/1
+Authorization:xav3bdotvybcjhfl4ux5
+###
+DELETE http://158.176.7.102:3000/shopping-cart/clear
+Authorization:xav3bdotvybcjhfl4ux5
+###

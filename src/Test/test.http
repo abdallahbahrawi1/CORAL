@@ -1,0 +1,282 @@
+GET http://localhost:3000/category
+###
+GET http://localhost:3000/category/3/products
+###
+GET http://158.176.7.102:3000/category/3/products
+
+#####
+GET http://localhost:3000/category/handpicked
+###
+GET http://localhost:3000/brand
+###
+GET http://localhost:3000/brand/top
+###
+GET http://localhost:3000/brand/3/products
+###
+GET http://localhost:3000/category/top
+
+###
+GET http://158.176.7.102:3000/category
+###
+#############################################
+# USERS
+
+POST http://localhost:3000/users/signup
+Content-Type: application/json
+
+{
+  "username": "t33yr",
+  "email": "tr4333e@example.com",
+  "password": "Mh&55r58r55",
+  "first_name": "John",
+  "last_name": "Doe",
+  "mobile": "1234567890",
+  "birth_date": "1990-01-01"
+}
+###
+POST http://localhost:3000/users/signin
+Content-Type: application/json
+
+{
+  "email": "tre@example.com",
+  "password": "Mh&55r58r55"
+}
+###
+GET  http://localhost:3000/users/signout 
+Authorization:xgrrkH3vkrfklzBsJ3M3jWcwJUhrhw 
+###
+#INFORMATION
+GET http://localhost:3000/users/53
+Authorization:1X63hhGJXtAvMFNS05ZD
+###
+#UPDATE INFORMATION
+PUT http://localhost:3000/users/54
+Content-Type: application/json
+Authorization:1X63hhGJXtAvMFNS05ZD
+
+{
+  "first_name": "ukuukuku",
+  "birth_date": "1997-01-01T00:00:00.000Z"
+}
+###
+#DELETE USER ACCOUNT 
+DELETE  http://localhost:3000/users/32
+Authorization:YrDWOklpKkaWl2OUTcH9lLTk5pacUc
+###
+PUT  http://localhost:3000/users/change-password
+Content-Type: application/json
+Authorization:1X63hhGJXtAvMFNS05ZD
+
+{
+  "currentPassword":"Mh&55r58r55",
+  "newPassword":"Mh&55r58r55444444"
+}
+
+###
+PUT  http://localhost:3000/users/change-username
+Content-Type: application/json
+Authorization:0LExz9in2mqO43v8eyjD
+
+{
+"newUsername":"kratos"
+}
+
+################################################
+
+#REVIEWS
+POST   http://localhost:3000/reviews/7
+Content-Type: application/json
+Authorization:a6fwkhr0gerk2n4iu7wn
+
+{
+  "rating":5,
+  "comment":"gtgrgr"
+}
+
+###
+
+PUT   http://localhost:3000/reviews/229
+Content-Type: application/json
+Authorization:a6fwkhr0gerk2n4iu7wn
+
+{
+  "rating":1,
+  "comment":"Mh&"
+}
+###
+DELETE    http://localhost:3000/reviews/1
+Authorization:a6fwkhr0gerk2n4iu7wn
+
+###
+GET http://localhost:3000/reviews
+Authorization:m9y5fp0gxfo6yqticdrb
+###
+GET http://158.176.7.102:3000/reviews
+Authorization:m9y5fp0gxfo6yqticdrb
+#######################################################
+
+#WISHLIST
+####
+GET http://localhost:3000/wishlist
+Authorization:a6fwkhr0gerk2n4iu7wn
+###
+DELETE  http://localhost:3000/wishlist
+Authorization:0LExz9in2mqO43v8eyjD
+###
+DELETE  http://localhost:3000/wishlist/product/16
+Authorization:a6fwkhr0gerk2n4iu7wn
+###
+POST   http://localhost:3000/wishlist/product
+Content-Type: application/json
+Authorization:a6fwkhr0gerk2n4iu7wn
+
+{
+  "product_id":30,
+  "comment":"i like it "
+}
+###
+POST   http://localhost:3000/wishlist/toggle
+Content-Type: application/json
+Authorization:a6fwkhr0gerk2n4iu7wn
+
+{
+  "product_id":40
+}
+
+###
+GET http://localhost:3000/products/info/2
+###
+GET http://localhost:3000/products/handpicked
+###
+GET http://localhost:3000/products/trendy
+###
+GET http://localhost:3000/products/new-arrivals
+###
+GET http://localhost:3000/products/limited-edition
+###
+GET http://localhost:3000/products/discount-15plus?pageSize=9&page=4
+###
+GET http://localhost:3000/products/popular?pageSize=9&page=3
+###
+GET http://localhost:3000/products?pageSize=9&page=1&sortBy=price-low&brandId=3
+###
+
+POST   http://localhost:3000/orders
+Content-Type: application/json
+Authorization:d2zih6gwap7ie65c9i3k
+
+
+ [
+  {
+    "product_id": 1,
+    "quantity": 100
+  },
+  {
+    "product_id": 2,
+    "quantity": 200
+  },
+  {
+    "product_id": 3,
+    "quantity": 30
+  },
+  {
+    "product_id": 4,
+    "quantity": 40
+  }
+]
+
+
+###
+GET http://localhost:3000/search/suggestions?keyword=h
+
+###
+GET http://localhost:3000/search?keyword=key
+
+###
+GET http://localhost:3000/shopping-cart
+Authorization:xav3bdotvybcjhfl4ux5
+###
+POST   http://localhost:3000/shopping-cart/add
+Content-Type: application/json
+Authorization:xav3bdotvybcjhfl4ux5
+
+ 
+{
+  "product_id": 1,
+  "quantity": 100
+}
+###
+PUT  http://localhost:3000/shopping-cart/update
+Content-Type: application/json
+Authorization:xav3bdotvybcjhfl4ux5
+
+ 
+{
+  "product_id": 1,
+  "quantity": 50
+}
+###
+DELETE  http://localhost:3000/shopping-cart/remove/1
+Authorization:xav3bdotvybcjhfl4ux5
+###
+DELETE  http://localhost:3000/shopping-cart/clear
+Authorization:xav3bdotvybcjhfl4ux5
+###
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###
+GET http://158.176.7.102:3000/products/info/88
+###
+GET http://158.176.7.102:3000/products/handpicked
+###
+GET http://158.176.7.102:3000/products/trendy
+###
+GET http://158.176.7.102:3000/products/new-arrivals
+###
+GET http://158.176.7.102:3000/products/limited-edition
+###
+GET http://158.176.7.102:3000/products/discount-15plus?pageSize=9&page=2
+###
+GET http://158.176.7.102:3000/products/popular?pageSize=9&page=1&sortBy=price-low
+###
+GET http://158.176.7.102:3000/products?page=3&sortBy=price-low
+###
+###
+GET http://158.176.7.102:3000/search/suggestions?keyword=o
+
+###
+GET http://158.176.7.102:3000/search?keyword=fr
+###
+GET http://158.176.7.102:3000/category/3/products
+####
+GET http://158.176.7.102:3000/brand/3/products
+
+###
+POST http://158.176.7.102:3000/users/signup
+Content-Type: application/json
+
+{
+  "username": "ahhsdf",
+  "email": "tfewfwfw3e@example.com",
+  "password": "Mh&55r58r55",
+  "first_name": "John",
+  "last_name": "Doe",
+  "mobile": "1234567890",
+  "birth_date": "1990-01-01"
+}

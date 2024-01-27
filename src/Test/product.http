@@ -1,0 +1,41 @@
+### LOCALHOST 
+###API
+GET http://localhost:3000/products/info/88
+###
+GET http://localhost:3000/products/handpicked
+###
+GET http://localhost:3000/products/trendy
+###
+GET http://localhost:3000/products/new-arrivals?sortBy=rating
+###
+GET http://localhost:3000/products/limited-edition
+###
+GET http://localhost:3000/products/discount-15plus?pageSize=9&page=1&categoryId=1
+###
+GET http://localhost:3000/products/popular?pageSize=9&page=1&sortBy=rating
+###
+GET http://localhost:3000/products?page=1&sortBy=price-low&sortBy=price-high&brandId=2&categoryId=5
+
+
+
+
+
+
+
+
+###API
+GET http://158.176.7.102:3000/products/info/88
+###
+GET http://158.176.7.102:3000/products/handpicked
+###
+GET http://158.176.7.102:3000/products/trendy
+###
+GET http://158.176.7.102:3000/products/new-arrivals?sortBy=latest
+###
+GET http://158.176.7.102:3000/products/limited-edition
+###
+GET http://158.176.7.102:3000/products/discount-15plus?pageSize=9&page=2&brandId=4
+###
+GET http://158.176.7.102:3000/products/popular?pageSize=9&page=1&sortBy=price-low
+###
+GET http://158.176.7.102:3000/products?page=3&sortBy=price-low&sortBy=price-high&brandId=4&categoryId=2
