@@ -15,8 +15,7 @@ export interface Session {
 }
 
 export interface ErrorResponse<T = string> {
-  code: number;
-  message: T;
+  error: string;
 }
 
 export interface CreateUserInput {
@@ -44,4 +43,13 @@ export interface UpdateUserDetailsInput {
   last_name: string;
   mobile: string;
   birth_date: string;
+}
+
+export interface Session {
+  id: number;
+  user_id: number;
+  session_key: string;
+  updatedAt: Date;
+  createdAt: Date;
+  expiry_date: Date;
 }

@@ -1,0 +1,59 @@
+#WISHLIST LOCALHOST
+####
+GET http://localhost:3000/wishlist
+Authorization:D2nmCX5Hlm6VWkqQySEbgHFxUDz8G4
+###
+DELETE  http://localhost:3000/wishlist
+Authorization:0LExz9in2mqO43v8eyjD
+###
+DELETE  http://localhost:3000/wishlist/product/16
+Authorization:a6fwkhr0gerk2n4iu7wn
+###
+POST   http://localhost:3000/wishlist/product
+Content-Type: application/json
+Authorization:jwkrzaiagw2i22qc4wyo
+
+{
+  "product_id":30,
+  "comment":"i like it "
+}
+###
+POST   http://localhost:3000/wishlist/toggle
+Content-Type: application/json
+Authorization:jwkrzaiagw2i22qc4wyo
+
+{
+  "product_id":40
+}
+
+
+
+
+
+
+#### API
+GET http://158.176.7.102:3000/wishlist
+Authorization:a6fwkhr0gerk2n4iu7wn
+###
+DELETE  http://158.176.7.102:3000/wishlist
+Authorization:0LExz9in2mqO43v8eyjD
+###
+DELETE  http://158.176.7.102:3000/wishlist/product/16
+Authorization:a6fwkhr0gerk2n4iu7wn
+###
+POST   http://158.176.7.102:3000/wishlist/product
+Content-Type: application/json
+Authorization:a6fwkhr0gerk2n4iu7wn
+
+{
+  "product_id":30,
+  "comment":"i like it "
+}
+###
+POST   http://158.176.7.102:3000/wishlist/toggle
+Content-Type: application/json
+Authorization:a6fwkhr0gerk2n4iu7wn
+
+{
+  "product_id":40
+}

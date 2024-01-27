@@ -13,7 +13,7 @@ export const createUserSchema = Joi.object({
   first_name: Joi.string().required(),
   last_name: Joi.string().required(),
   mobile: Joi.string()
-    .pattern(/^(\+\d{1,3}[- ]?)?(\d{3}[- ]?)?\d{4}[- ]?\d{3}$/)
+    .pattern(/^(\+\d{1,3}[- ]?)?\d{10}$/)
     .message("Please provide a valid mobile number")
     .required(),
   birth_date: Joi.string()

@@ -1,11 +1,27 @@
 import db from '../Database/Models/index';
-import { ShoppingCartItem, ErrorResponse } from '../Interfaces/shoppingCartInterface';
+import { ShoppingCartItem,ShoppingCart,ErrorResponse } from '../Interfaces/shoppingCartInterface';
 
-export const getUserShoppingCart = async (userId: number): Promise<ShoppingCartItem[] | ErrorResponse> => {
+export const getUserShoppingCart = async (userId: number): Promise<ShoppingCart[]|ErrorResponse > => {
   try {
-    const shoppingCartItems = await db.shoppingCarts.findAll({ where: { user_id: userId } });
+    const shoppingCartItems = await db.shoppingCarts.findAll({ where: { user_id: userId },
+      include: [
+        {
+          model: db.products,
+          attributes: ['name', 'price', 'sub_title'],
+          include: [
+            {
+              model: db.discounts,
+              attributes: ['percentage'],
+            },
+            {
+              model: db.productsImages,
+              attributes: ['image_url'],
+            },
+          ],
+        },
+      ], });
     return shoppingCartItems;
-  } catch (error) {
+  } catch (error:any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
     } else {
@@ -26,7 +42,7 @@ export const removeProductFromShoppingCart = async (
 
     await db.shoppingCarts.destroy({ where: { user_id: userId, product_id: productId } });
     return true;
-  } catch (error) {
+  } catch (error:any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
     } else {
@@ -54,7 +70,7 @@ export const addProductToShoppingCart = async (
 
     const shoppingCartItem = await db.shoppingCarts.create({ user_id: userId, product_id, quantity });
     return shoppingCartItem;
-  } catch (error) {
+  } catch (error:any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
     } else {
@@ -82,7 +98,7 @@ export const updateProductQuantityInShoppingCart = async (
 
     await db.shoppingCarts.update({ quantity }, { where: { user_id: userId, product_id } });
     return true;
-  } catch (error) {
+  } catch (error:any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
     } else {
@@ -100,7 +116,7 @@ export const clearUserShoppingCart = async (userId: number): Promise<boolean | E
 
     await db.shoppingCarts.destroy({ where: { user_id: userId } });
     return true;
-  } catch (error) {
+  } catch (error:any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
     } else {

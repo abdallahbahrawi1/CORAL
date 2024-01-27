@@ -1,0 +1,14 @@
+###LOCALHOST
+GET http://localhost:3000/brand
+###
+GET http://localhost:3000/brand/top
+###
+
+
+
+
+
+###API
+GET http://158.176.7.102:3000/brand
+###
+GET http://158.176.7.102:3000/brand/top

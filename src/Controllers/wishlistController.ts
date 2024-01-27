@@ -4,7 +4,7 @@ import { wishlistSchema } from '../Validators/wishlistSchema';
 
 
 
-export const DeleteUserWishlist = async (req: Request, res: Response): Promise<void> => {
+export const DeleteUserWishlist = async (req: Request, res: Response) => {
   try {
     const result = await wishlistService.DeleteUserWishlist(req.session.user_id);
     res.status(200).json(result);
@@ -14,7 +14,7 @@ export const DeleteUserWishlist = async (req: Request, res: Response): Promise<v
   }
 };
 
-export const toggleProductInWishlist = async (req: Request, res: Response): Promise<void> => {
+export const toggleProductInWishlist = async (req: Request, res: Response)=> {
   try {
     const { error, value } = wishlistSchema.validate(req.body);
     if (error) {
@@ -29,7 +29,7 @@ export const toggleProductInWishlist = async (req: Request, res: Response): Prom
   }
 };
 
-export const addProductToWishlist = async (req: Request, res: Response): Promise<void> => {
+export const addProductToWishlist = async (req: Request, res: Response) => {
   try {
     const { error, value } = wishlistSchema.validate(req.body);
     if (error) {
@@ -44,7 +44,7 @@ export const addProductToWishlist = async (req: Request, res: Response): Promise
   }
 };
 
-export const removeProductFromWishlist = async (req: Request, res: Response): Promise<void> => {
+export const removeProductFromWishlist = async (req: Request, res: Response) => {
   try {
     const result = await wishlistService.removeProductFromWishlist(req.session.user_id, parseInt(req.params.product_id));
     res.status(200).json(result);
@@ -54,7 +54,7 @@ export const removeProductFromWishlist = async (req: Request, res: Response): Pr
   }
 };
 
-export const getUserWishlist = async (req: Request, res: Response): Promise<void> => {
+export const getUserWishlist = async (req: Request, res: Response) => {
   try {
     const result = await wishlistService.getUserWishlist(req.session.user_id);
     res.status(200).json(result);

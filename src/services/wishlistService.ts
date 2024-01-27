@@ -1,12 +1,28 @@
 import db from '../Database/Models/index';
 
-import { WishlistItem, ErrorResponse } from '../Interfaces/wishlistInterface';
+import {Wishlist, WishlistItem, ErrorResponse } from '../Interfaces/wishlistInterface';
 
-export const getUserWishlist = async (userId: number): Promise<WishlistItem[] | ErrorResponse> => {
+export const getUserWishlist = async (userId: number): Promise<Wishlist[] | ErrorResponse> => {
   try {
-    const wishlists = await db.wishlists.findAll({ where: { user_id: userId } });
+    const wishlists = await db.wishlists.findAll({ where: { user_id: userId },
+      include: [
+        {
+          model: db.products,
+          attributes: ['name', 'price', 'sub_title'],
+          include: [
+            {
+              model: db.discounts,
+              attributes: ['percentage'],
+            },
+            {
+              model: db.productsImages,
+              attributes: ['image_url'],
+            },
+          ],
+        },
+      ], });
     return wishlists;
-  } catch (error) {
+  } catch (error:any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
     } else {
@@ -24,7 +40,7 @@ export const removeProductFromWishlist = async (userId: number, productId: numbe
 
     await db.wishlists.destroy({ where: { user_id: userId, product_id: productId } });
     return true;
-  } catch (error) {
+  } catch (error:any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
     } else {
@@ -49,7 +65,7 @@ export const addProductToWishlist = async (userId: number, productDetails: Wishl
 
     const wishlist = await db.wishlists.create({ user_id: userId, product_id, comment });
     return wishlist;
-  } catch (error) {
+  } catch (error:any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
     } else {
@@ -75,7 +91,7 @@ export const toggleProductInWishlist = async (userId: number, productDetails: Wi
 
     await db.wishlists.create({ user_id: userId, product_id, comment });
     return true;
-  } catch (error) {
+  } catch (error:any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
     } else {
@@ -93,7 +109,7 @@ export const DeleteUserWishlist = async (userId: number): Promise<boolean | Erro
 
     await db.wishlists.destroy({ where: { user_id: userId } });
     return true;
-  } catch (error) {
+  } catch (error:any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
     } else {

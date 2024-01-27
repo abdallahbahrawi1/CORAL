@@ -7,19 +7,16 @@ module.exports = (sequelize, DataTypes) => {
             unique: true,
         },
         expiry_date: {
-            type: DataTypes.STRING,
+            type: DataTypes.DATE,
         },
     }, {
         timestamps: true,
         hooks: {
-            beforeCreate: (session, options) => {
-                // Set expiry_date to 6 hours after createdAt
-                const sixHoursLater = new Date(session.createdAt);
-                sixHoursLater.setHours(sixHoursLater.getHours() + 6);
-                
-                // Format the date as a string
-                session.expiry_date = sixHoursLater.toISOString();
-            },
+            beforeCreate: (session) => {
+                const minutesLater = new Date(session.createdAt);
+                minutesLater.setMinutes(minutesLater.getMinutes() + 60);
+                 session.expiry_date = minutesLater;
+              },
         },
     });
 

@@ -1,6 +1,6 @@
-import { calculateGrandTotal, calculateTotalAmount, calculateTotalDiscount, createOrder, getAddressObject, getOrderById, getOrderItems, getProducts, processOrderItem} from '../services/orderService';
+import { calculateGrandTotal, calculateTotalAmount, calculateTotalDiscount, createOrder, getAddressObject, getOrderById, getOrderItems, getProducts, processOrderItem} from '../Services/orderService';
 import { placeOrderSchema, orderIdSchema } from '../Validators/ordersSchema';
-const db = require('../Database/Models/index.ts');
+import db from '../Database/Models/index';
 
 export const placeOrder = async (req, res) => {
   const { error, value } = placeOrderSchema.validate(req.body);

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import * as shoppingCartService from '../Services/shoppingCartService';
 import { shoppingCartSchema } from '../Validators/shoppingCartSchema';
 
-export const clearUserShoppingCart = async (req: Request, res: Response): Promise<void> => {
+export const clearUserShoppingCart = async (req: Request, res: Response) => {
   try {
     const result = await shoppingCartService.clearUserShoppingCart(req.session.user_id);
     res.status(200).json(result);
@@ -12,7 +12,7 @@ export const clearUserShoppingCart = async (req: Request, res: Response): Promis
   }
 };
 
-export const updateProductQuantityInShoppingCart = async (req: Request, res: Response): Promise<void> => {
+export const updateProductQuantityInShoppingCart = async (req: Request, res: Response)=> {
   try {
     const { error, value } = shoppingCartSchema.validate(req.body);
     if (error) {
@@ -27,7 +27,7 @@ export const updateProductQuantityInShoppingCart = async (req: Request, res: Res
   }
 };
 
-export const addProductToShoppingCart = async (req: Request, res: Response): Promise<void> => {
+export const addProductToShoppingCart = async (req: Request, res: Response) => {
   try {
     const { error, value } = shoppingCartSchema.validate(req.body);
     if (error) {
@@ -42,7 +42,7 @@ export const addProductToShoppingCart = async (req: Request, res: Response): Pro
   }
 };
 
-export const removeProductFromShoppingCart = async (req: Request, res: Response): Promise<void> => {
+export const removeProductFromShoppingCart = async (req: Request, res: Response) => {
   try {
     const result = await shoppingCartService.removeProductFromShoppingCart(
       req.session.user_id,

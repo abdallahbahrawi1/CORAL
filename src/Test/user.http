@@ -1,0 +1,126 @@
+### LOCALHOST
+POST http://localhost:3000/users/signup
+Content-Type: application/json
+
+{
+  "username": "ka22iessejo",
+  "email": "wdwd3ss3ww3e@example.com",
+  "password": "Mh&55r58r55",
+  "first_name": "John",
+  "last_name": "Doe",
+  "mobile": "1234567890",
+  "birth_date": "1990-01-01"
+}
+###
+POST http://localhost:3000/users/signin
+Content-Type: application/json
+
+{
+  "email": "wdwd33ww3e@example.com",
+  "password": "Mh&55r58r55"
+}
+###
+GET http://localhost:3000/users/signout 
+Authorization:0YDybsf1YaLHZ9efbt9Mr
+###
+#INFORMATION
+GET http://localhost:3000/users/53
+Authorization:jLt4vbZXmy23l0XfDBCG
+###
+#UPDATE INFORMATION
+PUT http://localhost:3000/users/54
+Content-Type: application/json
+Authorization:4mrgxgayd5v5wd5itjj5
+
+{
+  "first_name": "ukuukuku",
+  "birth_date": "1997-01-01T00:00:00.000Z"
+}
+###
+#DELETE USER ACCOUNT 
+DELETE http://localhost:3000/users/32
+Authorization:YrDWOklpKkaWl2OUTcH9lLTk5pacUc
+###
+PUT  http://localhost:3000/users/change-password
+Content-Type: application/json
+Authorization:WJMYw7ebYZHRxPkO7L9ctb2nfGrvfp
+
+{
+  "currentPassword":"Mh&55r58r55",
+  "newPassword":"JsMh&55r58r55"
+}
+
+###
+PUT  http://localhost:3000/users/change-username
+Content-Type: application/json
+Authorization:ndnj7jbbd2h46jx46ush
+
+{
+  "newUsername":"Mh&55r58r55"
+}
+
+
+
+
+
+
+### API 
+POST http://158.176.7.102:3000/users/signup
+Content-Type: application/json
+
+{
+  "username": "t33yr",
+  "email": "tr4333e@example.com",
+  "password": "Mh&55r58r55",
+  "first_name": "John",
+  "last_name": "Doe",
+  "mobile": "1234567890",
+  "birth_date": "1990-01-01"
+}
+###
+POST http://158.176.7.102:3000/users/signin
+Content-Type: application/json
+
+{
+  "email": "tre@example.com",
+  "password": "Mh&55r58r55"
+}
+###
+GET http://158.176.7.102:3000/users/signout 
+Authorization:xgrrkH3vkrfklzBsJ3M3jWcwJUhrhw 
+###
+#INFORMATION
+GET http://158.176.7.102:3000/users/53
+Authorization:1X63hhGJXtAvMFNS05ZD
+###
+#UPDATE INFORMATION
+PUT http://158.176.7.102:3000/users/54
+Content-Type: application/json
+Authorization:1X63hhGJXtAvMFNS05ZD
+
+{
+  "first_name": "ukuukuku",
+  "birth_date": "1997-01-01T00:00:00.000Z"
+}
+###
+#DELETE USER ACCOUNT 
+DELETE http://158.176.7.102:3000/users/32
+Authorization:YrDWOklpKkaWl2OUTcH9lLTk5pacUc
+###
+PUT http://158.176.7.102:3000/users/change-password
+Content-Type: application/json
+Authorization:1X63hhGJXtAvMFNS05ZD
+
+{
+  "currentPassword":"Mh&55r58r55",
+  "newPassword":"Mh&55r58r55444444"
+}
+
+###
+PUT http://158.176.7.102:3000/users/change-username
+Content-Type: application/json
+Authorization:0LExz9in2mqO43v8eyjD
+
+{
+"newUsername":"kratos"
+}
