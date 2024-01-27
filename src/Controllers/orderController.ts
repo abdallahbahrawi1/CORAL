@@ -2,7 +2,6 @@ import { addOrderAddress, createOrder, getOrderById, getOrderItems, getOrdersByU
 import { placeOrderSchema, orderIdSchema, AddOrderLocationAndPaymentSchema } from '../validators/ordersSchema';
 const db = require('../Database/Models/index.ts');
 
-
 interface Product {
   name: string;
   sub_title: string;
@@ -52,16 +51,8 @@ export const placeOrder = async (req, res) => {
     res.status(200).json(newOrder);
     } catch (error: any) {
       await transaction1.rollback();
-      if (error.message.includes("Insufficient quantity")) {
-        error.status = 409;
-        res.status(error.status).json({ error: error.message });
-      }else if(error.message.includes("c not found")){
-        error.status = 403;
-        res.status(error.status).json({ error: error.message });
-      } else {
-        error.status = 500;
-        res.status(error.status).json({ error: error.message });
-      }
+      const statusCode = error.code || 500;
+      res.status(statusCode).json({ error: error.message });
     }
 };
 

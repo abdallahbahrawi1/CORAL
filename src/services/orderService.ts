@@ -1,37 +1,37 @@
 const db = require('../Database/Models/index.ts');
-interface IProduct {
-    id: number;
-    name: string;
-    sub_title: string;
-    model: string;
-    description: string;
-    price: number;
-    stock_quantity: number;
-}
-interface IOrder {
-    id: number;
-    order_number: number;
-    total_amount: number;
-    order_date: string;
-    status: string;
-    payment_method: string;
-}
-interface IDiscount {
-    id: number;
-    percentage: number;
-    start_date: string;
-    end_date: string;
-    is_valid: boolean;
-}
-interface IOrderItems {
-    id: number;
-    price: number;
-    quantity: number;
-    createdAt: Date;
-    updatedAt: Date;
-    product_id: number;
-    order_id: number;
-}
+// interface IProduct {
+//     id: number;
+//     name: string;
+//     sub_title: string;
+//     model: string;
+//     description: string;
+//     price: number;
+//     stock_quantity: number;
+// }
+// interface IOrder {
+//     id: number;
+//     order_number: number;
+//     total_amount: number;
+//     order_date: string;
+//     status: string;
+//     payment_method: string;
+// }
+// interface IDiscount {
+//     id: number;
+//     percentage: number;
+//     start_date: string;
+//     end_date: string;
+//     is_valid: boolean;
+// }
+// interface IOrderItems {
+//     id: number;
+//     price: number;
+//     quantity: number;
+//     createdAt: Date;
+//     updatedAt: Date;
+//     product_id: number;
+//     order_id: number;
+// }
 interface Product {
   name: string;
   sub_title: string;
@@ -103,7 +103,7 @@ export const createOrder = async (userID: number,transaction = null) => {
     }
 };
 
-export const processOrderItem = async (item: IOrderItems, newOrder: IOrder, transaction = null) => {
+export const processOrderItem = async (item, newOrder, transaction = null) => {
     const product = await checkProductExistence(item.product_id, transaction);
     const quantity = item.quantity;
 
@@ -126,7 +126,7 @@ const checkProductExistence = async (productId: number, transaction = null) => {
     });
   
     if (!product) {
-      throw new Error(`Product with ID ${productId} not found.`);
+      throw { code: 403, message: `Product with ID ${productId} not found.`};
     }
   
     return product;
@@ -134,7 +134,7 @@ const checkProductExistence = async (productId: number, transaction = null) => {
 
 const validateQuantity = (requestedQuantity: number, availableQuantity: number, productId: number) => {
     if (requestedQuantity > availableQuantity) {
-        throw new Error(`Insufficient quantity for product with ID ${productId}.`);
+      throw { code: 409, message: `Insufficient quantity for product with ID ${productId}.` };
     }
 };
   
@@ -156,13 +156,13 @@ const getProductDiscount = async (productId: number, transaction = null) => {
     }, { transaction });
 };
 
-export const calculatePriceAfterDiscount = (product: IProduct, discount: IDiscount) => {
+export const calculatePriceAfterDiscount = (product, discount) => {
     const productPrice = product.price || 0;
     const discountPercentage = discount?.is_valid ? discount.percentage / 100 : 0;
     return productPrice - (discountPercentage * productPrice);
 };
 
-const createOrderItem = async (product: IProduct, newOrder: IOrder, quantity: number, transaction = null) => {
+const createOrderItem = async (product, newOrder, quantity: number, transaction = null) => {
     try {
         await db.ordersItems.create({
           price: product.price,

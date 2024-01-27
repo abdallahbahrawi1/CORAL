@@ -36,7 +36,7 @@ sequelize.authenticate()
         console.error('Error connecting to the database:', err);
     });
 
-const db:any = {};
+export const db:any = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
