@@ -1,6 +1,8 @@
+import { Order, Product } from '../Interfaces/orderInterface';
 import { sequelize } from './../Database/Models/index';
 const db = require('../Database/Models/index.ts');
-import { Product, Address, Order } from '../Interfaces/orderInterface'
+// import { Product, Address, Order } from '../Interfaces/orderInterface'
+
 const generateOrderNumber = async () => {
   let orderNumber: string = generateRandomOrderNumber();
   let checkOrderNumber = await db.orders.findOne({
@@ -173,7 +175,9 @@ const getProducts = async (orderItems) => {
       const product = await getProductById(item.product_id);
       const discount = await getProductDiscount(product.discount_id);
       const discountAmount = calculateDiscountAmount(product, discount);  
+      const productImageUrl = await getProductImageById(item.product_id);
       products.push({
+        image_url: productImageUrl,
         name: product.name,
         sub_title: product.sub_title,
         price: product.price,
@@ -189,6 +193,26 @@ const getProducts = async (orderItems) => {
     throw new Error(`failed to get the products.: ${error.message}`);
   }
 };
+
+const getProductImageById = async (productId) => {
+  try {
+    const productImage = await db.productimages.findOne({
+      where: {
+        product_id: productId,
+      },
+    });
+
+    if (productImage) {
+      return productImage.image_url
+    }else{
+      return ""
+    }
+  } catch (error) {
+    console.error('Error fetching the product image:', error);
+  }
+}
+
+
 
 const getProductById = async (productId: number) => {
   try {

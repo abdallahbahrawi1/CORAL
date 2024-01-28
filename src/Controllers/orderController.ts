@@ -107,4 +107,29 @@ export const cancelOrder = async (req, res) => {
 };
 
 
+export const reorder = async (req, res) => {
+  const { error: orderIdError, value: orderId } = orderIdSchema.validate(req.params.orderId);
+  
+  if (orderIdError) {
+    return res.status(400).json({ error: orderIdError.details[0].message });
+  }
+
+  try {
+    const originalOrder = await getOrderById(orderId);
+    
+    const newOrder = await createOrder(originalOrder.user_id);
+
+    const orderItems = await getOrderItems(orderId);
+
+    for (const item of orderItems) {
+      await processOrderItem(item.product, newOrder);
+    }
+
+    res.status(200).json(newOrder);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
 
