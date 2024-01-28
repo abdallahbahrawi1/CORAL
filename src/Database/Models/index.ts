@@ -157,4 +157,5 @@ db.sequelize
     console.error("Error synchronizing the database:", err);
   });
 
+  
 export default db;

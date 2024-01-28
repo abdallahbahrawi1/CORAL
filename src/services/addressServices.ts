@@ -1,21 +1,21 @@
-const db = require('../Database/Models/index.ts');
+import db from '../Database/Models/index';
 
-export const addAddress = async (orderId: number, addressValues) => {
+export const addAddress = async (addressValues, userID, transaction = null) => {
   try {
-    const { city, phone, street, country, user_id, postal_code, address_line1, address_line2 } = addressValues;
+    const { city, phone, street, country, postal_code, address_line1, address_line2 } = addressValues;
       return await db.addresses.create({
         city: city,
         phone: phone,
         street: street,
         country: country,
-        user_id: user_id,
+        user_id: userID,
         postal_code: postal_code,
         address_line1: address_line1,
         address_line2: address_line2,
         first_name: "first_name",
         last_name: "last_name",
         is_default: false,
-      });
+      }, { transaction });
   } catch (error: any) {
       throw new Error(`Failed to add a new address: ${error.message}`);
   }

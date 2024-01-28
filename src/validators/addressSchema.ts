@@ -5,7 +5,7 @@ export const addAddressSchema = Joi.object({
     phone: Joi.string().required(),
     street: Joi.string().required(),
     country: Joi.string().required(),
-    user_id: Joi.number().required(),
+    user_id: Joi.number(),
     postal_code: Joi.string().required(),
     address_line1: Joi.string().required(),
     address_line2: Joi.string().required(),

@@ -1,26 +1,37 @@
-import { addOrderAddress, createOrder, getOrderById, getOrderItems, getOrdersByUserId, processOrder, processOrderItem, returnOrderItem} from '../Services/orderService';
+import { createOrder, getOrderById, getOrderItems, getOrdersByUserId, getUserShoppingCart, processOrder, processOrderItem, removeAllItemsFromShoppingCart, returnOrderItem} from '../Services/orderService';
 import { placeOrderSchema, orderIdSchema, AddOrderLocationAndPaymentSchema } from '../Validators/ordersSchema';
-import { Product, Address, Order } from '../Interfaces/orderInterface'
+import { addAddress } from "../Services/addressServices";
 
-const db = require('../Database/Models/index.ts');
+import { Order } from '../Interfaces/orderInterface'
+import db from '../Database/Models/index';
+
 
 export const placeOrder = async (req, res) => {
-  const { error, value } = placeOrderSchema.validate(req.body);
+  const userID = req.session.user_id;
+  const shoppingCart = await getUserShoppingCart(userID);
+
+  const { error, value } = placeOrderSchema.validate(shoppingCart);
   if(error){
     return res.status(400).json({ error: error.details[0].message });
   }
+
+  const { error: orderBodyError, value: orderValues } = AddOrderLocationAndPaymentSchema.validate(req.body);
+  if(orderBodyError){
+    return res.status(400).json({ error: orderBodyError.details[0].message});
+  }
   const transaction1 = await db.sequelize.transaction();
   try {
-    const userID = req.session.user_id;
     const products = value;
 
-    const newOrder = await createOrder(userID, transaction1);
+    const newAddress = await addAddress(orderValues.order_address, userID, transaction1);
+
+    const newOrder = await createOrder(userID, newAddress.id, orderValues.payment_method, transaction1);
 
     for (const item of products) {
       await processOrderItem(item, newOrder, transaction1);
     }
+    await removeAllItemsFromShoppingCart(userID, transaction1);
     await transaction1.commit();
-
     res.status(200).json(newOrder);
     } catch (error: any) {
       await transaction1.rollback();
@@ -47,37 +58,12 @@ export const getUserOrders = async (req, res) => {
   try {
     const userID = req.session.user_id;
     const orders = await getOrdersByUserId(userID);
-    console.log("asdsadsa")
-
     const productsDetails: Order[] = [];
     for(const item of orders){
       let orderObj: Order = await processOrder(item);
       productsDetails.push(orderObj)
     }
     res.status(200).json(productsDetails);
-  } catch (error: any) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-export const AddOrderLocationAndPayment = async (req, res) => {
-  const { error: orderIdError, value: orderId } = orderIdSchema.validate(req.params.orderId);
-  if(orderIdError){
-    return res.status(400).json({ error: orderIdError.details[0].message});
-  }
-  const { error: orderBodyError, value: orderValues } = AddOrderLocationAndPaymentSchema.validate(req.body);
-  if(orderBodyError){
-    return res.status(400).json({ error: orderBodyError.details[0].message});
-  }
-
-  try {
-    const order = await getOrderById(orderId);
-    const orderAddress = await addOrderAddress(orderId, orderValues);
-    await order.update({
-      address_id: orderAddress.id,
-      payment_method: orderValues.payment_method
-    })
-    res.status(200).json(order);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -114,19 +100,23 @@ export const reorder = async (req, res) => {
     return res.status(400).json({ error: orderIdError.details[0].message });
   }
 
+  const transaction = await db.sequelize.transaction();
+
+
   try {
     const originalOrder = await getOrderById(orderId);
-    
-    const newOrder = await createOrder(originalOrder.user_id);
 
+    const newOrder = await createOrder(originalOrder.user_id, originalOrder.address_id, originalOrder.payment_method, transaction);
     const orderItems = await getOrderItems(orderId);
+    // await processOrderItem(item, newOrder, transaction1);
 
     for (const item of orderItems) {
-      await processOrderItem(item.product, newOrder);
+      await processOrderItem(item, newOrder, transaction);
     }
-
+    await transaction.commit();
     res.status(200).json(newOrder);
   } catch (error: any) {
+    await transaction.rollback();
     res.status(500).json({ error: error.message });
   }
 };

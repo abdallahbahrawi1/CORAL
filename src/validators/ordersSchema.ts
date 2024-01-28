@@ -1,6 +1,6 @@
 import Joi from 'joi'
 
-export const placeOrderSchema = Joi.array().items(
+export const placeOrderSchema = Joi.array().min(1).items(
   Joi.object({
     product_id: Joi.number().min(1).required(),
     quantity: Joi.number().min(1).required()
@@ -11,11 +11,15 @@ export const orderIdSchema = Joi.number().positive()
 
 export const AddOrderLocationAndPaymentSchema = Joi.object({
   order_address: Joi.object({
-    email: Joi.string().email().required(),
-    mobile: Joi.string().pattern(/^[0-9]{10}$/).required(),
-    location: Joi.string().required(),
-    last_name: Joi.string().required(),
     first_name: Joi.string().required(),
+    last_name: Joi.string().required(),
+    city: Joi.string().required(),
+    phone: Joi.string().pattern(/^[0-9]{7,15}$/).required(),
+    street: Joi.string().required(),
+    country: Joi.string().required(),
+    postal_code: Joi.string().required(),
+    address_line1: Joi.string().required(),
+    address_line2: Joi.string(),
   }).required(),
   payment_method: Joi.string().required(),
 });

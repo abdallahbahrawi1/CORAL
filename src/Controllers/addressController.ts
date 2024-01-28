@@ -1,8 +1,5 @@
 import { addAddress, deleteAddressById, getAddressById, getAllAddresses, updateAddressById } from "../Services/addressServices";
 import { addAddressSchema } from "../Validators/addressSchema";
-
-const db = require('../Database/Models/index.ts');
-
 export const addNewAddress = async (req, res) => {
   const { error, value } = addAddressSchema.validate(req.body);
   if(error){
@@ -11,7 +8,7 @@ export const addNewAddress = async (req, res) => {
   try {
 
     const userID = req.session.user_id;
-    const newAddress = await addAddress(userID, value);
+    const newAddress = await addAddress(value, userID);
 
     res.status(201).json(newAddress);
   } catch (error: any) {

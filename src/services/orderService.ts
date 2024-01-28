@@ -1,7 +1,5 @@
 import { Order, Product } from '../Interfaces/orderInterface';
-import { sequelize } from './../Database/Models/index';
-const db = require('../Database/Models/index.ts');
-// import { Product, Address, Order } from '../Interfaces/orderInterface'
+import db from '../Database/Models/index';
 
 const generateOrderNumber = async () => {
   let orderNumber: string = generateRandomOrderNumber();
@@ -29,17 +27,17 @@ function generateRandomOrderNumber() {
   return randomString;
 }
 
-export const createOrder = async (userID: number,transaction = null) => {
+export const createOrder = async (userID: number, addressID: number, payment_method: string,  transaction = null) => {
     try {
         let orderNumber: string =  await generateOrderNumber();
         return await db.orders.create({
             order_number: orderNumber,
             status: 'processing',
-            payment_method: 'Credit Card',
+            payment_method,
             order_date: db.sequelize.literal('CURRENT_TIMESTAMP'),
             order_update: false,
             user_id: userID, 
-            address_id: null, 
+            address_id: addressID, 
         }, { transaction });
     } catch (error: any) {
         throw new Error(`Failed to create an order: ${error.message}`);
@@ -47,15 +45,16 @@ export const createOrder = async (userID: number,transaction = null) => {
 };
 
 export const processOrderItem = async (item, newOrder, transaction = null) => {
-    const product = await checkProductExistence(item.product_id, transaction);
-    const quantity = item.quantity;
 
-    validateQuantity(quantity, product.stock_quantity, item.product_id);
-  
-    const newStockQuantity = product.stock_quantity - quantity;
-    await updateProductStock(product, newStockQuantity, transaction);
+  const product = await checkProductExistence(item.product_id, transaction);
+  const quantity = item.quantity;
 
-    await createOrderItem(product, newOrder, quantity, transaction);
+  validateQuantity(quantity, product.stock_quantity, item.product_id);
+
+  const newStockQuantity = product.stock_quantity - quantity;
+  await updateProductStock(product, newStockQuantity, transaction);
+
+  await createOrderItem(product, newOrder, quantity, transaction);
 };
 
 const checkProductExistence = async (productId: number, transaction = null) => {
@@ -142,7 +141,6 @@ export const getOrderById = async (orderId: number) => {
 };
 
 export const getOrdersByUserId = async (userID: number) => {
-  console.log(db)
   const order = await db.orders.findAll({
       where: {
       user_id: userID,
@@ -177,7 +175,7 @@ const getProducts = async (orderItems) => {
       const discountAmount = calculateDiscountAmount(product, discount);  
       const productImageUrl = await getProductImageById(item.product_id);
       products.push({
-        image_url: productImageUrl,
+        image_url: productImageUrl || "",
         name: product.name,
         sub_title: product.sub_title,
         price: product.price,
@@ -194,21 +192,20 @@ const getProducts = async (orderItems) => {
   }
 };
 
-const getProductImageById = async (productId) => {
+const getProductImageById = async (productId: number) => {
   try {
-    const productImage = await db.productimages.findOne({
+    const productImage = await db.productsImages.findOne({
       where: {
         product_id: productId,
       },
     });
-
     if (productImage) {
       return productImage.image_url
     }else{
       return ""
     }
   } catch (error) {
-    console.error('Error fetching the product image:', error);
+    throw new Error(`Error fetching the product image:, ${error.message}`);
   }
 }
 
@@ -348,3 +345,33 @@ export const returnOrderItem = async (item) => {
       throw new Error(`Failed to return order with ID ${item.order_id}: ${error.message}`);
   }
 };
+
+export const getUserShoppingCart = async (userId: number)  => {
+  try {
+    const shoppingCartItems = await db.shoppingCarts.findAll({
+      attributes: ['quantity', 'product_id'], 
+      where: { user_id: userId },
+    });
+    const formattedResult = shoppingCartItems.map(item => ({
+      quantity: item.quantity,
+      product_id: item.product_id,
+    }));
+
+    return formattedResult;
+  } catch (error: any) {
+    throw { code: 500, message: `cant get user shopping cart with ID ${userId}` };
+  }
+};
+
+export const removeAllItemsFromShoppingCart = async (userId: number, transaction = null) => {
+  try {
+    await db.shoppingCarts.destroy({
+      where: {
+        user_id: userId,
+      },
+    }, { transaction }  );
+  } catch (error: any) {
+    throw { code: 500, message: `can't clear user ID ${userId} shopping cart`};
+  }
+};
+
