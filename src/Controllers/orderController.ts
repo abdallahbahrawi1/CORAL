@@ -108,7 +108,6 @@ export const reorder = async (req, res) => {
 
     const newOrder = await createOrder(originalOrder.user_id, originalOrder.address_id, originalOrder.payment_method, transaction);
     const orderItems = await getOrderItems(orderId);
-    // await processOrderItem(item, newOrder, transaction1);
 
     for (const item of orderItems) {
       await processOrderItem(item, newOrder, transaction);
