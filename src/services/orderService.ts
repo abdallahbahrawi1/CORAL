@@ -1,46 +1,5 @@
-const db = require('../Database/Models/index.ts');
-interface IProduct {
-    id: number;
-    name: string;
-    sub_title: string;
-    model: string;
-    description: string;
-    price: number;
-    stock_quantity: number;
-}
-interface IOrder {
-    id: number;
-    order_number: number;
-    total_amount: number;
-    order_date: string;
-    status: string;
-    payment_method: string;
-}
-interface IDiscount {
-    id: number;
-    percentage: number;
-    start_date: string;
-    end_date: string;
-    is_valid: boolean;
-}
-interface IOrderItems {
-    id: number;
-    price: number;
-    quantity: number;
-    createdAt: Date;
-    updatedAt: Date;
-    product_id: number;
-    order_id: number;
-}
-interface Product {
-  name: string;
-  sub_title: string;
-  price: number;
-  discount: number;
-  quantity: number;
-  sub_total: number;
-  product_id: string;
-}
+import { Order, Product } from '../Interfaces/orderInterface';
+import db from '../Database/Models/index';
 
 const generateOrderNumber = async () => {
   let orderNumber: string = generateRandomOrderNumber();
@@ -68,34 +27,34 @@ function generateRandomOrderNumber() {
   return randomString;
 }
 
-export const createOrder = async (userID: number,transaction = null) => {
+export const createOrder = async (userID: number, addressID: number, payment_method: string,  transaction = null) => {
     try {
         let orderNumber: string =  await generateOrderNumber();
         return await db.orders.create({
             order_number: orderNumber,
             status: 'processing',
-            payment_method: 'Credit Card',
+            payment_method,
             order_date: db.sequelize.literal('CURRENT_TIMESTAMP'),
             order_update: false,
             user_id: userID, 
-            address_id: null, 
+            address_id: addressID, 
         }, { transaction });
     } catch (error: any) {
         throw new Error(`Failed to create an order: ${error.message}`);
     }
 };
 
+export const processOrderItem = async (item, newOrder, transaction = null) => {
 
-export const processOrderItem = async (item: IOrderItems, newOrder: IOrder, transaction = null) => {
-    const product = await checkProductExistence(item.product_id, transaction);
-    const quantity = item.quantity;
+  const product = await checkProductExistence(item.product_id, transaction);
+  const quantity = item.quantity;
 
-    validateQuantity(quantity, product.stock_quantity, item.product_id);
-  
-    const newStockQuantity = product.stock_quantity - quantity;
-    await updateProductStock(product, newStockQuantity, transaction);
+  validateQuantity(quantity, product.stock_quantity, item.product_id);
 
-    await createOrderItem(product, newOrder, quantity, transaction);
+  const newStockQuantity = product.stock_quantity - quantity;
+  await updateProductStock(product, newStockQuantity, transaction);
+
+  await createOrderItem(product, newOrder, quantity, transaction);
 };
 
 const checkProductExistence = async (productId: number, transaction = null) => {
@@ -109,7 +68,7 @@ const checkProductExistence = async (productId: number, transaction = null) => {
     });
   
     if (!product) {
-      throw new Error(`Product with ID ${productId} not found.`);
+      throw { code: 403, message: `Product with ID ${productId} not found.`};
     }
   
     return product;
@@ -117,7 +76,7 @@ const checkProductExistence = async (productId: number, transaction = null) => {
 
 const validateQuantity = (requestedQuantity: number, availableQuantity: number, productId: number) => {
     if (requestedQuantity > availableQuantity) {
-        throw new Error(`Insufficient quantity for product with ID ${productId}.`);
+      throw { code: 409, message: `Insufficient quantity for product with ID ${productId}.` };
     }
 };
   
@@ -125,8 +84,8 @@ const updateProductStock = async (product: any, newQuantity: number, transaction
     try {
         product.stock_quantity = newQuantity;
         await product.save({ transaction });
-    } catch (error) {
-        throw new Error(`failed to update product stock with ID ${product.id}.`);
+    } catch (error: any) {
+        throw new Error(`failed to update product stock with ID ${product.id}.:${error.message}`);
     }
 };
 
@@ -139,13 +98,13 @@ const getProductDiscount = async (productId: number, transaction = null) => {
     }, { transaction });
 };
 
-export const calculatePriceAfterDiscount = (product: IProduct, discount: IDiscount) => {
+export const calculatePriceAfterDiscount = (product, discount) => {
     const productPrice = product.price || 0;
     const discountPercentage = discount?.is_valid ? discount.percentage / 100 : 0;
     return productPrice - (discountPercentage * productPrice);
 };
 
-const createOrderItem = async (product: IProduct, newOrder: IOrder, quantity: number, transaction = null) => {
+const createOrderItem = async (product, newOrder, quantity: number, transaction = null) => {
     try {
         await db.ordersItems.create({
           price: product.price,
@@ -168,6 +127,7 @@ export const updateOrderTotalAmount = async (newOrder: any, totalPrice: number, 
 };
 
 export const getOrderById = async (orderId: number) => {
+
   const order = await db.orders.findOne({
       where: {
       id: orderId,
@@ -180,7 +140,20 @@ export const getOrderById = async (orderId: number) => {
   return order;
 };
 
-export const getOrderItems = async (orderId) => {
+export const getOrdersByUserId = async (userID: number) => {
+  const order = await db.orders.findAll({
+      where: {
+      user_id: userID,
+      },
+  });
+
+  if (!order) {
+    throw new Error(`Cant find orders for user ID ${userID}.`);
+  }
+  return order;
+};
+
+export const getOrderItems = async (orderId: number) => {
   try {
     return await db.ordersItems.findAll({
       where: {
@@ -192,7 +165,7 @@ export const getOrderItems = async (orderId) => {
   }
 };
 
-export const getProducts = async (orderItems) => {
+const getProducts = async (orderItems) => {
   try {    
     const products: Product[] = [];
   
@@ -200,7 +173,9 @@ export const getProducts = async (orderItems) => {
       const product = await getProductById(item.product_id);
       const discount = await getProductDiscount(product.discount_id);
       const discountAmount = calculateDiscountAmount(product, discount);  
+      const productImageUrl = await getProductImageById(item.product_id);
       products.push({
+        image_url: productImageUrl || "",
         name: product.name,
         sub_title: product.sub_title,
         price: product.price,
@@ -216,6 +191,25 @@ export const getProducts = async (orderItems) => {
     throw new Error(`failed to get the products.: ${error.message}`);
   }
 };
+
+const getProductImageById = async (productId: number) => {
+  try {
+    const productImage = await db.productsImages.findOne({
+      where: {
+        product_id: productId,
+      },
+    });
+    if (productImage) {
+      return productImage.image_url
+    }else{
+      return ""
+    }
+  } catch (error) {
+    throw new Error(`Error fetching the product image:, ${error.message}`);
+  }
+}
+
+
 
 const getProductById = async (productId: number) => {
   try {
@@ -246,7 +240,7 @@ const checkDiscountValidity = (expiryDate) => {
   return formattedCurrentDate <= expiryDate;
 };
 
-export const getAddressObject = async (order) => {
+const getAddressObject = async (order) => {
   const address = await db.addresses.findOne({
     where: {
       id: order.address_id,
@@ -273,16 +267,111 @@ export const getAddressObject = async (order) => {
   return {};
 };
 
-export const calculateTotalAmount = (products) => {
+const calculateTotalAmount = (products) => {
   return products.reduce((total, product) => total + product.price * product.quantity, 0);
 };
 
-export const calculateTotalDiscount = (products) => {
+const calculateTotalDiscount = (products) => {
   return products.reduce((total, product) => total + product.discount, 0);
 };
 
-export const calculateGrandTotal = (products) => {
+const calculateGrandTotal = (products) => {
   const totalAmount = calculateTotalAmount(products);
   const totalDiscount = calculateTotalDiscount(products);
   return totalAmount - totalDiscount;
 };
+
+export const processOrder =async (order) => {
+  try {
+    let status = order.status;
+    let order_id = order.id;
+    let order_date = order.order_date;
+    const orderItems = await getOrderItems(order_id);
+    const products = await getProducts(orderItems);
+    const addressObj = await getAddressObject(order);
+
+    let orderObj: Order = {
+      "status": status,
+      "order_id": order_id,
+      "products": products,
+      "order_date": order_date,
+      "total_amount": calculateTotalAmount(products),
+      "total_discount": calculateTotalDiscount(products),
+      "grand_total": calculateGrandTotal(products),
+      "payment_method": order.payment_method,
+      "addresses": addressObj
+    };
+
+    return orderObj;
+  } catch (error) {
+    throw error; 
+  }
+}
+
+export const addOrderAddress = async (orderId: number, orderValues) => {
+  try {
+    const { email, mobile, location, last_name, first_name } = orderValues.order_address;
+      return await db.addresses.create({
+        first_name: first_name,
+        last_name: last_name,
+        phone: mobile,
+        country: "",
+        city: "",
+        street: "",
+        address_line1: "",
+        address_line2: "",
+        postal_code: "",
+        is_default: false,
+        user_id: orderId
+      });
+  } catch (error: any) {
+      throw new Error(`Failed to add a location for the order: ${error.message}`);
+  }
+};
+
+export const returnOrderItem = async (item) => {
+  try {
+    const product = await db.products.findOne({
+      where: {
+        id: item.product_id,
+      }
+    });
+    const quantity = product.stock_quantity;
+    const itemQuantity = item.quantity   
+
+    const newStockQuantity = quantity + itemQuantity;
+    await updateProductStock(product, newStockQuantity);
+  } catch (error: any) {
+      throw new Error(`Failed to return order with ID ${item.order_id}: ${error.message}`);
+  }
+};
+
+export const getUserShoppingCart = async (userId: number)  => {
+  try {
+    const shoppingCartItems = await db.shoppingCarts.findAll({
+      attributes: ['quantity', 'product_id'], 
+      where: { user_id: userId },
+    });
+    const formattedResult = shoppingCartItems.map(item => ({
+      quantity: item.quantity,
+      product_id: item.product_id,
+    }));
+
+    return formattedResult;
+  } catch (error: any) {
+    throw { code: 500, message: `cant get user shopping cart with ID ${userId}` };
+  }
+};
+
+export const removeAllItemsFromShoppingCart = async (userId: number, transaction = null) => {
+  try {
+    await db.shoppingCarts.destroy({
+      where: {
+        user_id: userId,
+      },
+    }, { transaction }  );
+  } catch (error: any) {
+    throw { code: 500, message: `can't clear user ID ${userId} shopping cart`};
+  }
+};
+

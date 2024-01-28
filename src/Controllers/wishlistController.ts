@@ -3,7 +3,6 @@ import * as wishlistService from '../Services/wishlistService';
 import { wishlistSchema } from '../Validators/wishlistSchema';
 
 
-
 export const DeleteUserWishlist = async (req: Request, res: Response) => {
   try {
     const result = await wishlistService.DeleteUserWishlist(req.session.user_id);

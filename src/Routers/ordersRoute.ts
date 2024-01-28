@@ -1,11 +1,14 @@
 import express, { Router } from 'express';
-import { placeOrder, getOrderInfo} from '../Controllers/orderController';
-// import {checkSessionId} from '../Controllers/userController';
+import { placeOrder, getOrderInfo, getUserOrders, cancelOrder, reorder} from '../Controllers/orderController';
 
-// const router: Router = express.Router();
 
-// //Endpoint to place an order to a user 
-// router.post('/', checkSessionId, placeOrder);
-// router.get('/info/:orderId', getOrderInfo);
+const router: Router = express.Router();
 
-// export default router;
+router.post('/', placeOrder);
+router.get('/', getUserOrders);
+router.get('/info/:orderId', getOrderInfo);
+router.get('/:orderId', getUserOrders);
+router.put('/:orderId/cancel', cancelOrder);
+router.post('/reorder/:orderId', reorder);
+
+export default router;

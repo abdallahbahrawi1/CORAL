@@ -24,7 +24,7 @@ sequelize
     console.error("Error connecting to the database:", err);
   });
 
-const db: any = {};
+const db:any = {};
 
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
@@ -157,4 +157,5 @@ db.sequelize
     console.error("Error synchronizing the database:", err);
   });
 
+  
 export default db;
