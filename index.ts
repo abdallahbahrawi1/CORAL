@@ -7,7 +7,7 @@ import categoryRoute from './src/Routers/categoryRoute';
 import brandRoute from './src/Routers/brandRoute';
 import searchRoute from './src/Routers/searchRoute';
 import wishlistRoute from './src/Routers/wishlistRoute';
-// import ordersRoute from './src/Routers/ordersRoute';
+import ordersRoute from './src/Routers/ordersRoute';
 import shoppingCartRoute from './src/Routers/shoppingCartRoute';
 
 import {checkSessionKey} from './src/Middlewares/checkSession';
@@ -34,7 +34,7 @@ app.use('/category', categoryRoute);
 app.use('/brand', brandRoute);
 app.use('/search', searchRoute);
 app.use('/wishlist',checkSessionKey, wishlistRoute);
-// app.use('/orders',checkSessionId, ordersRoute);
+app.use('/orders',checkSessionKey, ordersRoute);
 app.use('/shopping-cart',checkSessionKey, shoppingCartRoute);
 
 

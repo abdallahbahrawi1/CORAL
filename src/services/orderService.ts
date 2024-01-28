@@ -1,65 +1,6 @@
+import { sequelize } from './../Database/Models/index';
 const db = require('../Database/Models/index.ts');
-// interface IProduct {
-//     id: number;
-//     name: string;
-//     sub_title: string;
-//     model: string;
-//     description: string;
-//     price: number;
-//     stock_quantity: number;
-// }
-// interface IOrder {
-//     id: number;
-//     order_number: number;
-//     total_amount: number;
-//     order_date: string;
-//     status: string;
-//     payment_method: string;
-// }
-// interface IDiscount {
-//     id: number;
-//     percentage: number;
-//     start_date: string;
-//     end_date: string;
-//     is_valid: boolean;
-// }
-// interface IOrderItems {
-//     id: number;
-//     price: number;
-//     quantity: number;
-//     createdAt: Date;
-//     updatedAt: Date;
-//     product_id: number;
-//     order_id: number;
-// }
-interface Product {
-  name: string;
-  sub_title: string;
-  price: number;
-  discount: number;
-  quantity: number;
-  sub_total: number;
-  product_id: string;
-}
-interface Order {
-  status: string;
-  order_id: number;
-  products: Product[];
-  order_date: string;
-  total_amount: number;
-  total_discount: number;
-  grand_total: number;
-  payment_method: string;
-  addresses: Address;
-}
-interface Address {
-  email?: string;
-  mobile?: string;
-  address_line1?: string;
-  city?: string;
-  first_name?: string;
-  last_name?: string;
-}
+import { Product, Address, Order } from '../Interfaces/orderInterface'
 const generateOrderNumber = async () => {
   let orderNumber: string = generateRandomOrderNumber();
   let checkOrderNumber = await db.orders.findOne({
@@ -185,6 +126,7 @@ export const updateOrderTotalAmount = async (newOrder: any, totalPrice: number, 
 };
 
 export const getOrderById = async (orderId: number) => {
+
   const order = await db.orders.findOne({
       where: {
       id: orderId,
@@ -198,6 +140,7 @@ export const getOrderById = async (orderId: number) => {
 };
 
 export const getOrdersByUserId = async (userID: number) => {
+  console.log(db)
   const order = await db.orders.findAll({
       where: {
       user_id: userID,
@@ -322,7 +265,6 @@ export const processOrder =async (order) => {
     let status = order.status;
     let order_id = order.id;
     let order_date = order.order_date;
-
     const orderItems = await getOrderItems(order_id);
     const products = await getProducts(orderItems);
     const addressObj = await getAddressObject(order);
@@ -365,7 +307,6 @@ export const addOrderAddress = async (orderId: number, orderValues) => {
       throw new Error(`Failed to add a location for the order: ${error.message}`);
   }
 };
-
 
 export const returnOrderItem = async (item) => {
   try {

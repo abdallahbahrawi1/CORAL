@@ -1,35 +1,8 @@
-import { addOrderAddress, createOrder, getOrderById, getOrderItems, getOrdersByUserId, processOrder, processOrderItem, returnOrderItem} from '../services/orderService';
-import { placeOrderSchema, orderIdSchema, AddOrderLocationAndPaymentSchema } from '../validators/ordersSchema';
-const db = require('../Database/Models/index.ts');
+import { addOrderAddress, createOrder, getOrderById, getOrderItems, getOrdersByUserId, processOrder, processOrderItem, returnOrderItem} from '../Services/orderService';
+import { placeOrderSchema, orderIdSchema, AddOrderLocationAndPaymentSchema } from '../Validators/ordersSchema';
+import { Product, Address, Order } from '../Interfaces/orderInterface'
 
-interface Product {
-  name: string;
-  sub_title: string;
-  price: number;
-  discount: number;
-  quantity: number;
-  sub_total: number;
-  product_id: string;
-}
-interface Address {
-  email?: string;
-  mobile?: string;
-  address_line1?: string;
-  city?: string;
-  first_name?: string;
-  last_name?: string;
-}
-interface Order {
-  status: string;
-  order_id: number;
-  products: Product[];
-  order_date: string;
-  total_amount: number;
-  total_discount: number;
-  grand_total: number;
-  payment_method: string;
-  addresses: Address;
-}
+const db = require('../Database/Models/index.ts');
 
 export const placeOrder = async (req, res) => {
   const { error, value } = placeOrderSchema.validate(req.body);
@@ -74,6 +47,7 @@ export const getUserOrders = async (req, res) => {
   try {
     const userID = req.session.user_id;
     const orders = await getOrdersByUserId(userID);
+    console.log("asdsadsa")
 
     const productsDetails: Order[] = [];
     for(const item of orders){

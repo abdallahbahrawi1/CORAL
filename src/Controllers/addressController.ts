@@ -1,5 +1,5 @@
-import { addAddress, deleteAddressById, getAddressById, getAllAddresses, updateAddressById } from "../services/addressServices";
-import { addAddressSchema } from "../validators/addressSchema";
+import { addAddress, deleteAddressById, getAddressById, getAllAddresses, updateAddressById } from "../Services/addressServices";
+import { addAddressSchema } from "../Validators/addressSchema";
 
 const db = require('../Database/Models/index.ts');
 
