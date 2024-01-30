@@ -45,7 +45,7 @@ db.sessions = require("./session")(sequelize, DataTypes);
 
 // User relations
 db.addresses.belongsTo(db.users, {
-  foreignKey: { name: "user_id", allowNull: false },
+  foreignKey: { name: "user_id", allowNull: true },
 });
 db.reviews.belongsTo(db.users, {
   foreignKey: { name: "user_id", allowNull: false },
@@ -64,7 +64,7 @@ db.wishlists.belongsTo(db.users, {
 });
 
 db.users.hasMany(db.addresses, {
-  foreignKey: { name: "user_id", allowNull: false },
+  foreignKey: { name: "user_id", allowNull: true },
 });
 db.users.hasMany(db.reviews, {
   foreignKey: { name: "user_id", allowNull: false },
@@ -137,19 +137,19 @@ db.orders.hasMany(db.ordersItems, {
   foreignKey: { name: "order_id", allowNull: false },
 });
 db.orders.belongsTo(db.addresses, {
-  foreignKey: { name: "address_id", allowNull: true },
+  foreignKey: { name: "address_id", allowNull: false },
 });
 
 db.ordersItems.belongsTo(db.orders, {
   foreignKey: { name: "order_id", allowNull: false },
 });
 db.addresses.hasMany(db.orders, {
-  foreignKey: { name: "address_id", allowNull: true },
+  foreignKey: { name: "address_id", allowNull: false },
 });
 
 // Sync the s with the database
 db.sequelize
-  .sync({ alter: true })
+  .sync({})
   .then(() => {
     console.log("Database synchronization complete.");
   })

@@ -1,5 +1,7 @@
-import { addAddress, deleteAddressById, getAddressById, getAllAddresses, updateAddressById } from "../Services/addressServices";
-import { addAddressSchema } from "../Validators/addressSchema";
+import { addAddress, deleteAddressById, findDefaultAddress, getAddressById, getAllAddresses, setNewDefaultAddress, updateAddressById, updatePreviousDefaultAddress } from "../Services/addressServices";
+import { addAddressSchema, updateAddressSchema } from "../Validators/addressSchema";
+import { idSchema } from "../Validators/idParamsSchema";
+
 export const addNewAddress = async (req, res) => {
   const { error, value } = addAddressSchema.validate(req.body);
   if(error){
@@ -29,9 +31,15 @@ export const getUserAddresses = async (req, res) => {
 };
 
 export const getAddressDetails = async (req, res) => {
-  const addressId = req.params.addressId;
+  
+  const { error, value: addressId } = idSchema.validate(req.params.addressId);
+  if(error){
+    return res.status(400).json({ error: error.details[0].message});
+  }
+  const userID = req.session.user_id;
+
   try {
-    const addressDetails = await getAddressById(addressId);
+    const addressDetails = await getAddressById(addressId, userID);
 
     res.status(201).json(addressDetails);
   } catch (error: any) {
@@ -41,7 +49,10 @@ export const getAddressDetails = async (req, res) => {
 
 export const deleteAddress = async (req, res) => {
   const userId = req.session.user_id;
-  const addressId = req.params.addressId;
+  const { error, value: addressId } = idSchema.validate(req.params.addressId);
+  if(error){
+    return res.status(400).json({ error: error.details[0].message});
+  }
 
   try {
     const deletedAddress = await deleteAddressById(userId, addressId);
@@ -50,7 +61,7 @@ export const deleteAddress = async (req, res) => {
       return res.status(404).json({ error: 'Address not found' });
     }
 
-    res.status(204).send(); 
+    res.status(204).send({ error: 'Address successfully deleted'}); 
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
@@ -58,8 +69,16 @@ export const deleteAddress = async (req, res) => {
 
 export const updateAddress = async (req, res) => {
   const userId = req.session.user_id;
-  const addressId = req.params.addressId;
-  const updatedAddressData = req.body;
+
+  const { error, value: addressId } = idSchema.validate(req.params.addressId);
+  if(error){
+    return res.status(400).json({ error: error.details[0].message});
+  }
+  
+  const { error: updatedAddressError, value: updatedAddressData } = updateAddressSchema.validate(req.body);
+  if(updatedAddressError){
+    return res.status(400).json({ error: updatedAddressError.details[0].message});
+  }
   try {
     const updatedAddress = await updateAddressById(userId, addressId, updatedAddressData);
 
@@ -72,3 +91,45 @@ export const updateAddress = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+export const setAddressDefault = async (req, res) => {
+  const { error, value: addressId } = idSchema.validate(req.params.addressId);
+  if(error){
+    return res.status(400).json({ error: error.details[0].message});
+  }
+
+  const userID = req.session.user_id;
+  try {
+    const address = await getAddressById(addressId, userID);
+
+    if (!address) {
+      return res.status(404).json({ error: 'Address not found' });
+    }
+
+    await updatePreviousDefaultAddress(address.user_id);
+    await setNewDefaultAddress(addressId);
+
+    return res.status(200).json({ message: 'Default address set successfully' });
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+export const getDefaultAddress = async (req, res) => {
+  const userId = req.session.user_id;
+
+  try {
+    const defaultAddress = await findDefaultAddress(userId);
+    console.log(defaultAddress)
+    if (!defaultAddress) {
+      return res.status(404).json({ error: 'Default address not found' });
+    }
+
+    return res.status(200).json(defaultAddress);
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+
+
