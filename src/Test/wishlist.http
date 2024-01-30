@@ -1,7 +1,7 @@
 #WISHLIST LOCALHOST
 ####
 GET http://localhost:3000/wishlist
-Authorization:D2nmCX5Hlm6VWkqQySEbgHFxUDz8G4
+Authorization:NYhXe22gIMZ2jTZ7VfTIPJvTpO68Hx
 ###
 DELETE  http://localhost:3000/wishlist
 Authorization:0LExz9in2mqO43v8eyjD
@@ -11,7 +11,7 @@ Authorization:a6fwkhr0gerk2n4iu7wn
 ###
 POST   http://localhost:3000/wishlist/product
 Content-Type: application/json
-Authorization:jwkrzaiagw2i22qc4wyo
+Authorization:NYhXe22gIMZ2jTZ7VfTIPJvTpO68Hx
 
 {
   "product_id":30,
@@ -20,7 +20,7 @@ Authorization:jwkrzaiagw2i22qc4wyo
 ###
 POST   http://localhost:3000/wishlist/toggle
 Content-Type: application/json
-Authorization:jwkrzaiagw2i22qc4wyo
+Authorization:NYhXe22gIMZ2jTZ7VfTIPJvTpO68Hx
 
 {
   "product_id":40

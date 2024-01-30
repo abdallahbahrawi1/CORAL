@@ -868,10 +868,12 @@
 //     res.status(500).json({ error: 'Internal Server Error' });
 //   }
 // };
+
 import { Request, Response } from 'express';
 import * as productService from '../Services/productService';
 import {ProductQueryOptions} from '../Interfaces/productInterface'
 
+//options that can be passed in the query to filter or sort by or for pagination settings. can chose all,none, or mulitple
 export const generateOptions = (req: Request) => {
   return {
     sortBy: req.query.sortBy || 'ratings',
@@ -882,6 +884,7 @@ export const generateOptions = (req: Request) => {
   };
 };
 
+//return all products with given filters and sorting options 
 export const getProducts = async (req: Request, res: Response) => {
   try {
     const options = {
@@ -899,6 +902,7 @@ export const getProducts = async (req: Request, res: Response) => {
   }
 };
 
+//return all products with given filters and sorting options and created in the last 3 months 
 export const getNewArrivals = async (req: Request, res: Response) => {
   try {
     const options = {
@@ -921,6 +925,7 @@ export const getNewArrivals = async (req: Request, res: Response) => {
   }
 };
 
+//return all products with given filters and sorting options and stock_qunatity is 20 or less
 export const getLimitProducts = async (req: Request, res: Response) => {
   try {
     const options = {
@@ -943,6 +948,7 @@ export const getLimitProducts = async (req: Request, res: Response) => {
   }
 };
 
+//return all products with given filters and sorting options and discounted 15% or more
 export const getDiscountPlusProducts = async (req: Request, res: Response) => {
   try {
     const options = {
@@ -960,6 +966,7 @@ export const getDiscountPlusProducts = async (req: Request, res: Response) => {
   }
 };
 
+//return all products with given filters and sorting options and avg review rating above 4.5
 export const getPopularProducts = async (req: Request, res: Response) => {
   try {
     const options = {
@@ -976,6 +983,7 @@ export const getPopularProducts = async (req: Request, res: Response) => {
   }
 };
 
+//return all products with given filters and sorting options and avg review rating above 4.5 and price 100 or less
 export const handPickedProducts = async (req: Request, res: Response) => {
   try {
     const options = {
@@ -997,7 +1005,7 @@ export const handPickedProducts = async (req: Request, res: Response) => {
   }
 };
 
-
+//return all comprehensive details about a specfic product with all its images , reviews and related products 
 export const getProductDetails = async (req: Request, res: Response): Promise<void> => {
   try {
     const product = await productService.getProductDetails(req.params.product_id);

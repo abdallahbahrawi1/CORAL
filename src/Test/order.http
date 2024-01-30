@@ -1,0 +1,74 @@
+POST http://localhost:3000/orders
+Authorization: uYn82mfG6X0gIDtSIhfN5wBcq697Cz
+Content-Type: application/json
+
+{
+  "order_address": {
+    "first_name": "fdsf",
+    "last_name": "lafdsfe",
+    "city": "Berlin",
+    "phone": "2595565892",
+    "street": "stugt St",
+    "country": "Germany",
+    "postal_code": "59784",
+    "address_line1": "ELK GROVE CA 95758",
+    "address_line2": " CA 95758"
+  },
+  "payment_method": "Credit Card"
+}
+###
+GET http://localhost:3000/orders/info/11
+Authorization: uYn82mfG6X0gIDtSIhfN5wBcq697Cz
+
+###
+GET http://localhost:3000/orders
+Authorization: uYn82mfG6X0gIDtSIhfN5wBcq697Cz
+###
+
+
+POST http://localhost:3000/orders/reorder/156
+Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+###
+
+PUT http://localhost:3000/orders/156/cancel
+Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+###
+
+
+
+
+POST http://158.176.7.102:3000/orders
+Authorization: yj7xu3d0d8x0eoi5n30n
+Content-Type: application/json
+
+{
+  "order_address": {
+    "first_name": "fdsf",
+    "last_name": "lafdsfe",
+    "city": "Berlin",
+    "phone": "2565892",
+    "street": "stugt St",
+    "country": "Germany",
+    "postal_code": "59784",
+    "address_line1": "ELK GROVE CA 95758",
+    "address_line2": " CA 95758"
+  },
+  "payment_method": "Credit Card"
+}
+###
+GET http://158.176.7.102:3000/orders/info/1
+Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+
+###
+GET http://158.176.7.102:3000/orders
+Authorization: eb9azj7s25ua77kyinkm
+###
+
+
+POST http://158.176.7.102:3000/orders/reorder/156
+Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+###
+
+PUT http://158.176.7.102:3000/orders/156/cancel
+Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+###

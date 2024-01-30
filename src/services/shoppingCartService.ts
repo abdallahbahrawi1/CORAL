@@ -65,7 +65,8 @@ export const addProductToShoppingCart = async (
 
     const existingCartItem = await db.shoppingCarts.findOne({ where: { user_id: userId, product_id } });
     if (existingCartItem) {
-      throw { code: 409, message: 'User already has this product in their shopping cart' };
+      const newQuantity=quantity+existingCartItem.quantity
+      return await db.shoppingCarts.update({quantity:newQuantity},{ where: { user_id: userId, product_id } });
     }
 
     const shoppingCartItem = await db.shoppingCarts.create({ user_id: userId, product_id, quantity });

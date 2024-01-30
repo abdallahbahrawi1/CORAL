@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
                 const minutesLater = new Date(session.createdAt);
                 minutesLater.setMinutes(minutesLater.getMinutes() + 60);
                  session.expiry_date = minutesLater;
+
               },
         },
     });

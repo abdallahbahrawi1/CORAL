@@ -12,10 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       },
 
       start_date: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
       },
       expiry_date: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
       },
     },
     {

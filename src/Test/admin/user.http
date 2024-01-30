@@ -1,0 +1,18 @@
+GET http://localhost:3000/admin/users?createdStartDate=1962&createdEndDate=2024
+Authorization:fadi
+
+###
+GET http://localhost:3000/admin/products?categoryId=2&type=category
+Authorization:fadi
+
+###
+GET http://localhost:3000/admin/users?maxAge=40&minAge=18
+Authorization:fadi
+
+
+###
+GET http://localhost:3000/admin/users?loginStartDate=2024-01-01&loginEndDate=2024-01-31
+Authorization:fadi
+###
+GET http://localhost:3000/admin/users?country=Italy
+Authorization:fadi

@@ -1,24 +1,24 @@
 ### LOCALHOST
 GET http://localhost:3000/shopping-cart
-Authorization:ucwzimuzuqe74870snn7
+Authorization:uYn82mfG6X0gIDtSIhfN5wBcq697Cz
 ###
 POST http://localhost:3000/shopping-cart/add
 Content-Type: application/json
-Authorization:jwkrzaiagw2i22qc4wyo
+Authorization:jhxngj9lviqdaovlwao8
 
  
 {
-  "product_id": 2,
-  "quantity": 100
+  "product_id": 4,
+  "quantity": 1
 }
 ###
 PUT http://localhost:3000/shopping-cart/update
 Content-Type: application/json
-Authorization:jwkrzaiagw2i22qc4wyo
+Authorization:jhxngj9lviqdaovlwao8
 
  
 {
-  "product_id": 1,
+  "product_id": 4,
   "quantity": 52
 }
 ###

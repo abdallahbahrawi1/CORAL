@@ -30,7 +30,7 @@ GET http://158.176.7.102:3000/products/handpicked
 ###
 GET http://158.176.7.102:3000/products/trendy
 ###
-GET http://158.176.7.102:3000/products/new-arrivals?sortBy=latest
+GET http://158.176.7.102:3000/products/new-arrivals
 ###
 GET http://158.176.7.102:3000/products/limited-edition
 ###

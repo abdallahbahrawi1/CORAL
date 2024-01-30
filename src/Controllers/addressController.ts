@@ -1,4 +1,4 @@
-import { addAddress, deleteAddressById, getAddressById, getAllAddresses, updateAddressById } from "../Services/addressServices";
+import { addAddress, deleteAddressById, getAddressById, getAllAddresses, updateAddressById } from "../Services/addressService";
 import { addAddressSchema } from "../Validators/addressSchema";
 export const addNewAddress = async (req, res) => {
   const { error, value } = addAddressSchema.validate(req.body);

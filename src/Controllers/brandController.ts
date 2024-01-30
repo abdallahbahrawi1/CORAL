@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as brandService from '../Services/brandService';
 
+//return brands with their logos
 export const getAllBrands = async (req: Request, res: Response)=> {
     try {
         const brands = await brandService.getAllBrands();
@@ -11,7 +12,8 @@ export const getAllBrands = async (req: Request, res: Response)=> {
     }
 };
 
-  export const getTopBrands = async (req: Request, res: Response)=> {
+//brands selected by store/admin to appear in home page
+export const getTopBrands = async (req: Request, res: Response)=> {
     try {
         const brands = await brandService.getTopBrands();
         return res.status(200).json(brands);

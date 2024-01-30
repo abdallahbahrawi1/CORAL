@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import * as shoppingCartService from '../Services/shoppingCartService';
 import { shoppingCartSchema } from '../Validators/shoppingCartSchema';
 
+//allows user to clear his shopping cart
 export const clearUserShoppingCart = async (req: Request, res: Response) => {
   try {
     const result = await shoppingCartService.clearUserShoppingCart(req.session.user_id);
@@ -12,6 +13,7 @@ export const clearUserShoppingCart = async (req: Request, res: Response) => {
   }
 };
 
+//allows user to update a quantity of a product in his shopping cart
 export const updateProductQuantityInShoppingCart = async (req: Request, res: Response)=> {
   try {
     const { error, value } = shoppingCartSchema.validate(req.body);
@@ -27,6 +29,7 @@ export const updateProductQuantityInShoppingCart = async (req: Request, res: Res
   }
 };
 
+//allows user to add a product to his shopping cart
 export const addProductToShoppingCart = async (req: Request, res: Response) => {
   try {
     const { error, value } = shoppingCartSchema.validate(req.body);
@@ -42,6 +45,7 @@ export const addProductToShoppingCart = async (req: Request, res: Response) => {
   }
 };
 
+//allows user to remove a product from his shopping cart
 export const removeProductFromShoppingCart = async (req: Request, res: Response) => {
   try {
     const result = await shoppingCartService.removeProductFromShoppingCart(
@@ -55,6 +59,7 @@ export const removeProductFromShoppingCart = async (req: Request, res: Response)
   }
 };
 
+//allows user to get his shopping cart
 export const getUserShoppingCart = async (req: Request, res: Response): Promise<void> => {
   try {
     const result = await shoppingCartService.getUserShoppingCart(req.session.user_id);

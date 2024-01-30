@@ -1,6 +1,6 @@
 import { createOrder, getOrderById, getOrderItems, getOrdersByUserId, getUserShoppingCart, processOrder, processOrderItem, removeAllItemsFromShoppingCart, returnOrderItem} from '../Services/orderService';
 import { placeOrderSchema, orderIdSchema, AddOrderLocationAndPaymentSchema } from '../Validators/ordersSchema';
-import { addAddress } from "../Services/addressServices";
+import { addAddress } from "../Services/addressService";
 
 import { Order } from '../Interfaces/orderInterface'
 import db from '../Database/Models/index';

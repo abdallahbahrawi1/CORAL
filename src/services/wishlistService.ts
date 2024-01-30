@@ -86,7 +86,7 @@ export const toggleProductInWishlist = async (userId: number, productDetails: Wi
     const existingWishlist = await db.wishlists.findOne({ where: { user_id: userId, product_id } });
     if (existingWishlist) {
       await db.wishlists.destroy({ where: { user_id: userId, product_id } });
-      return true;
+      return false;
     }
 
     await db.wishlists.create({ user_id: userId, product_id, comment });

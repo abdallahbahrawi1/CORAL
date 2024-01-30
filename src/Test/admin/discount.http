@@ -1,0 +1,21 @@
+POST http://localhost:3000/admin/discounts
+Content-Type: application/json
+Authorization:fadi
+
+{
+  "percentage": 21
+}
+
+###
+PUT http://localhost:3000/admin/discounts/21
+Content-Type: application/json
+Authorization:fadi
+
+
+{
+  "percentage": 21
+}
+###
+PUT http://localhost:3000/admin/discounts/apply/5?categoryId=13&brandId=30
+Content-Type: application/json
+Authorization:fadi

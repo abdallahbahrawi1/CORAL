@@ -9,6 +9,9 @@ import searchRoute from './src/Routers/searchRoute';
 import wishlistRoute from './src/Routers/wishlistRoute';
 import ordersRoute from './src/Routers/ordersRoute';
 import shoppingCartRoute from './src/Routers/shoppingCartRoute';
+import adminRoutes from './src/Routers/adminRoutes';
+
+import {checkAdmin} from './src/Middlewares/checkAdmin';
 
 import {checkSessionKey} from './src/Middlewares/checkSession';
 
@@ -27,7 +30,7 @@ app.use('/uploads', express.static('uploads'));
 app.use('/Images',express.static('./src/Images'))
 app.use('/Images',express.static('./src/images'))
 app.use('/users', usersRoute);
-app.use('/addresses',checkSessionKey, addressesRoute);
+app.use('/addresses',checkSessionKey,addressesRoute);
 app.use('/reviews',checkSessionKey,reviewsRoute);
 app.use('/products', productRoute);
 app.use('/category', categoryRoute);
@@ -36,7 +39,7 @@ app.use('/search', searchRoute);
 app.use('/wishlist',checkSessionKey, wishlistRoute);
 app.use('/orders',checkSessionKey, ordersRoute);
 app.use('/shopping-cart',checkSessionKey, shoppingCartRoute);
-
+app.use('/admin',checkAdmin,adminRoutes);
 
 
 

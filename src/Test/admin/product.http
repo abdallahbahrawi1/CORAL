@@ -1,0 +1,34 @@
+POST http://localhost:3000/admin/products
+Content-Type: application/json
+Authorization:fadi
+
+{
+  "name": "Product Name",
+  "sub_title": "Product Subtitle",
+  "price": 39.99,
+  "stock_quantity": 100,
+  "description": "Product Description",
+  "brand_id": 1,
+  "category_id": 2,
+  "model": "Product Model",
+  "discount_id": 3
+}
+
+###
+PUT http://localhost:3000/admin/products/1002
+Content-Type: application/json
+Authorization:fadi
+
+{
+  "name": "ddd 22",
+  "sub_title": "Product Subtitle",
+  "price": 39.99,
+  "stock_quantity": 100,
+  "description": "Product Description",
+  "brand_id": 1,
+  "category_id": 2,
+  "model": "Product Model",
+  "discount_id": 3
+}
+
+###

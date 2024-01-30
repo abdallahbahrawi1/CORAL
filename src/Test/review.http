@@ -2,11 +2,11 @@
 #REVIEWS LOCALHOST
 ###
 GET http://localhost:3000/reviews
-Authorization:DXAq9VfPtloocEVPsNhO
+Authorization:uYn82mfG6X0gIDtSIhfN5wBcq697Cz
 ###
 POST http://localhost:3000/reviews/4
 Content-Type: application/json
-Authorization:DXAq9VfPtloocEVPsNhO
+Authorization:uYn82mfG6X0gIDtSIhfN5wBcq697Cz
 
 {
   "rating":5,

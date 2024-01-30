@@ -1,0 +1,58 @@
+### LOCALHOST
+POST http://localhost:3000/admin/signup
+Content-Type: application/json
+Authorization:0YDybsf1YaLHZ9efbt9Mr
+
+{
+  "username": "ka22iessejo",
+  "email": "wdwd3ss3ww3e@example.com",
+  "password": "Mh&55r58r55",
+  "role": "John",
+  "fullName": "Doe"
+}
+###
+POST http://localhost:3000/admin/signin
+Content-Type: application/json
+Authorization:0YDybsf1YaLHZ9efbt9Mr
+
+{
+  "email": "wdwd3ss3ww3e@example.com",
+  "password": "Mh&55r58r55"
+}
+###
+GET http://localhost:3000/admin/signout 
+Authorization:0YDybsf1YaLHZ9efbt9Mr
+###
+#UPDATE INFORMATION
+PUT http://localhost:3000/admin/54
+Content-Type: application/json
+Authorization:JXcGoi30frtfBNWYzIooPbXBCIh40t
+
+{
+  "role": "rippr",
+  "fullName": "jack"
+}
+###
+#DELETE USER ACCOUNT 
+DELETE http://localhost:3000/admin/32
+Authorization:YrDWOklpKkaWl2OUTcH9lLTk5pacUc
+###
+PUT  http://localhost:3000/admin/change-password
+Content-Type: application/json
+Authorization:JXcGoi30frtfBNWYzIooPbXBCIh40t
+
+{
+  "currentPassword":"Mh&55r58r55",
+  "newPassword":"JsMh&55r58r55"
+}
+
+###
+PUT  http://localhost:3000/admin/change-username
+Content-Type: application/json
+Authorization:JXcGoi30frtfBNWYzIooPbXBCIh40t
+
+{
+  "newUsername":"Mh&"
+}
+
+
