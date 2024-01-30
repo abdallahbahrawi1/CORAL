@@ -1,5 +1,6 @@
 import { createOrder, getOrderById, getOrderItems, getOrdersByUserId, getUserShoppingCart, processOrder, processOrderItem, removeAllItemsFromShoppingCart, returnOrderItem} from '../Services/orderService';
-import { placeOrderSchema, orderIdSchema, AddOrderLocationAndPaymentSchema } from '../Validators/ordersSchema';
+import { placeOrderSchema, AddOrderLocationAndPaymentSchema } from '../Validators/ordersSchema';
+import { idSchema } from '../Validators/idParamsSchema'
 import { addAddress } from "../Services/addressServices";
 
 import { Order } from '../Interfaces/orderInterface'
@@ -41,12 +42,13 @@ export const placeOrder = async (req, res) => {
 };
 
 export const getOrderInfo = async (req, res) => {
-  const { error, value } = orderIdSchema.validate(req.params.orderId);
+  const userID = req.session.user_id;
+  const { error, value } = idSchema.validate(req.params.orderId);
   if(error){
     return res.status(400).json({ error: error.details[0].message});
   }
   try {
-    const order = await getOrderById(value);
+    const order = await getOrderById(value, userID);
     let orderObj = await processOrder(order);
     res.status(200).json(orderObj);
   } catch (error: any) {
@@ -70,13 +72,14 @@ export const getUserOrders = async (req, res) => {
 };
 
 export const cancelOrder = async (req, res) => {
-  const { error: orderIdError, value: orderId } = orderIdSchema.validate(req.params.orderId);
+  const userID = req.session.user_id;
+  const { error: orderIdError, value: orderId } = idSchema.validate(req.params.orderId);
   if(orderIdError){
     return res.status(400).json({ error: orderIdError.details[0].message});
   }
 
   try {
-    const order = await getOrderById(orderId);
+    const order = await getOrderById(orderId, userID);
     const orderItems = await getOrderItems(orderId)
 
     for (const item of orderItems) {
@@ -92,9 +95,10 @@ export const cancelOrder = async (req, res) => {
   }
 };
 
-
 export const reorder = async (req, res) => {
-  const { error: orderIdError, value: orderId } = orderIdSchema.validate(req.params.orderId);
+  const userID = req.session.user_id;
+
+  const { error: orderIdError, value: orderId } = idSchema.validate(req.params.orderId);
   
   if (orderIdError) {
     return res.status(400).json({ error: orderIdError.details[0].message });
@@ -102,9 +106,8 @@ export const reorder = async (req, res) => {
 
   const transaction = await db.sequelize.transaction();
 
-
   try {
-    const originalOrder = await getOrderById(orderId);
+    const originalOrder = await getOrderById(orderId, userID);
 
     const newOrder = await createOrder(originalOrder.user_id, originalOrder.address_id, originalOrder.payment_method, transaction);
     const orderItems = await getOrderItems(orderId);

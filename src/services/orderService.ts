@@ -126,11 +126,12 @@ export const updateOrderTotalAmount = async (newOrder: any, totalPrice: number, 
     }
 };
 
-export const getOrderById = async (orderId: number) => {
+export const getOrderById = async (orderId: number, userID: number) => {
 
   const order = await db.orders.findOne({
       where: {
       id: orderId,
+      user_id: userID,
       },
   });
 
@@ -172,16 +173,17 @@ const getProducts = async (orderItems) => {
     for (const item of orderItems) {
       const product = await getProductById(item.product_id);
       const discount = await getProductDiscount(product.discount_id);
-      const discountAmount = calculateDiscountAmount(product, discount);  
+      const discountAmount = calculateDiscountAmount(product, discount) * item.quantity;  
       const productImageUrl = await getProductImageById(item.product_id);
       products.push({
+        id: product.id,
         image_url: productImageUrl || "",
         name: product.name,
         sub_title: product.sub_title,
         price: product.price,
-        discount: discountAmount,
         quantity: item.quantity,
-        sub_total: product.price * item.quantity,
+        discount: discountAmount,
+        sub_total: (product.price * item.quantity) - discountAmount,
         product_id: product.product_id,
       });
     }
@@ -239,7 +241,7 @@ const checkDiscountValidity = (expiryDate) => {
   const formattedCurrentDate = currentDate.toISOString().split('T')[0];
   return formattedCurrentDate <= expiryDate;
 };
-
+//todo
 const getAddressObject = async (order) => {
   const address = await db.addresses.findOne({
     where: {
@@ -253,14 +255,19 @@ const getAddressObject = async (order) => {
         id: address.user_id,
       },
     });
-
-    return {
-      email: user.email,
-      mobile: user.mobile,
-      address_line1: address.address_line1,
+   return {
+      id: address.id,
+      address: address.country,
       city: address.city,
-      first_name: address.first_name,
-      last_name: address.last_name,
+      street:address.street,
+      mobile: address.phone,
+      address_line1: address.address_line1,
+      address_line2: address.address_line2,
+      postal_code: address.postal_code,
+      is_default: address.is_default,
+      user_id: address.user_id,
+      email: user.email,
+      full_name: address.full_name,
     };
   }
 
@@ -307,27 +314,6 @@ export const processOrder =async (order) => {
     throw error; 
   }
 }
-
-export const addOrderAddress = async (orderId: number, orderValues) => {
-  try {
-    const { email, mobile, location, last_name, first_name } = orderValues.order_address;
-      return await db.addresses.create({
-        first_name: first_name,
-        last_name: last_name,
-        phone: mobile,
-        country: "",
-        city: "",
-        street: "",
-        address_line1: "",
-        address_line2: "",
-        postal_code: "",
-        is_default: false,
-        user_id: orderId
-      });
-  } catch (error: any) {
-      throw new Error(`Failed to add a location for the order: ${error.message}`);
-  }
-};
 
 export const returnOrderItem = async (item) => {
   try {
