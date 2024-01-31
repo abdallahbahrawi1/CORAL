@@ -291,17 +291,18 @@ const calculateGrandTotal = (products) => {
 export const processOrder =async (order) => {
   try {
     let status = order.status;
-    let order_id = order.id;
-    let order_date = order.order_date;
-    const orderItems = await getOrderItems(order_id);
+    let orderID = order.id;
+    let orderDate = order.order_date;
+    let orderNumber = order.order_number
+    const orderItems = await getOrderItems(orderID);
     const products = await getProducts(orderItems);
     const addressObj = await getAddressObject(order);
-
     let orderObj: Order = {
       "status": status,
-      "order_id": order_id,
+      "order_number": orderNumber,
+      "order_id": orderID,
       "products": products,
-      "order_date": order_date,
+      "order_date": orderDate,
       "total_amount": calculateTotalAmount(products),
       "total_discount": calculateTotalDiscount(products),
       "grand_total": calculateGrandTotal(products),
@@ -315,20 +316,22 @@ export const processOrder =async (order) => {
   }
 }
 
-export const returnOrderItem = async (item) => {
+export const returnOrderItem = async (item, transaction) => {
   try {
     const product = await db.products.findOne({
       where: {
         id: item.product_id,
       }
-    });
+    }, {transaction});
+
     const quantity = product.stock_quantity;
-    const itemQuantity = item.quantity   
+    const itemQuantity = item.quantity;
 
     const newStockQuantity = quantity + itemQuantity;
-    await updateProductStock(product, newStockQuantity);
+
+    await updateProductStock(product, newStockQuantity, transaction);
   } catch (error: any) {
-      throw new Error(`Failed to return order with ID ${item.order_id}: ${error.message}`);
+    throw new Error(`Failed to return order with ID ${item.order_id}: ${error.message}`);
   }
 };
 

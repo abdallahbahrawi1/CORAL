@@ -14,7 +14,8 @@ export const addNewAddress = async (req, res) => {
 
     res.status(201).json(newAddress);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error(error.message)
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -26,7 +27,8 @@ export const getUserAddresses = async (req, res) => {
 
     res.status(200).json(addresses);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error(error.message)
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -41,34 +43,36 @@ export const getAddressDetails = async (req, res) => {
   try {
     const addressDetails = await getAddressById(addressId, userID);
 
-    res.status(201).json(addressDetails);
+    res.status(200).json(addressDetails);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error(error.message)
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
 export const deleteAddress = async (req, res) => {
-  const userId = req.session.user_id;
+  const userID = req.session.user_id;
   const { error, value: addressId } = idSchema.validate(req.params.addressId);
   if(error){
     return res.status(400).json({ error: error.details[0].message});
   }
 
   try {
-    const deletedAddress = await deleteAddressById(userId, addressId);
+    const deletedAddress = await deleteAddressById(userID, addressId);
 
     if (!deletedAddress) {
       return res.status(404).json({ error: 'Address not found' });
     }
 
-    res.status(204).send({ error: 'Address successfully deleted'}); 
+    res.status(204).send({ success: true }); 
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error(error.message)
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
 export const updateAddress = async (req, res) => {
-  const userId = req.session.user_id;
+  const userID = req.session.user_id;
 
   const { error, value: addressId } = idSchema.validate(req.params.addressId);
   if(error){
@@ -80,7 +84,7 @@ export const updateAddress = async (req, res) => {
     return res.status(400).json({ error: updatedAddressError.details[0].message});
   }
   try {
-    const updatedAddress = await updateAddressById(userId, addressId, updatedAddressData);
+    const updatedAddress = await updateAddressById(userID, addressId, updatedAddressData);
 
     if (!updatedAddress) {
       return res.status(400).json({ error: 'Address not found' });
@@ -116,10 +120,10 @@ export const setAddressDefault = async (req, res) => {
 };
 
 export const getDefaultAddress = async (req, res) => {
-  const userId = req.session.user_id;
+  const userID = req.session.user_id;
 
   try {
-    const defaultAddress = await findDefaultAddress(userId);
+    const defaultAddress = await findDefaultAddress(userID);
     console.log(defaultAddress)
     if (!defaultAddress) {
       return res.status(404).json({ error: 'Default address not found' });

@@ -37,7 +37,8 @@ export const placeOrder = async (req, res) => {
     } catch (error: any) {
       await transaction1.rollback();
       const statusCode = error.code || 500;
-      res.status(statusCode).json({ error: error.message });
+      console.error(error.message)
+      res.status(statusCode).json({ error: 'Internal Server Error' });
     }
 };
 
@@ -52,7 +53,8 @@ export const getOrderInfo = async (req, res) => {
     let orderObj = await processOrder(order);
     res.status(200).json(orderObj);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error(error.message)
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -67,7 +69,8 @@ export const getUserOrders = async (req, res) => {
     }
     res.status(200).json(productsDetails);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    console.error(error.message)
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -75,23 +78,29 @@ export const cancelOrder = async (req, res) => {
   const userID = req.session.user_id;
   const { error: orderIdError, value: orderId } = idSchema.validate(req.params.orderId);
   if(orderIdError){
-    return res.status(400).json({ error: orderIdError.details[0].message});
+    return res.status(400).json({ error: orderIdError.details[0].message });
   }
+
+  const transaction = await db.sequelize.transaction(); 
 
   try {
     const order = await getOrderById(orderId, userID);
-    const orderItems = await getOrderItems(orderId)
+    const orderItems = await getOrderItems(orderId);
 
     for (const item of orderItems) {
-      await returnOrderItem(item);
+      await returnOrderItem(item, transaction);
     }
-    
+
     await order.update({
       status: "cancelled"
-    })
+    }, { transaction });
+
+    await transaction.commit(); 
     res.status(200).json(order);
   } catch (error: any) {
-    res.status(500).json({ error: error.message });
+    await transaction.rollback(); 
+    console.error(error.message);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -119,7 +128,8 @@ export const reorder = async (req, res) => {
     res.status(200).json(newOrder);
   } catch (error: any) {
     await transaction.rollback();
-    res.status(500).json({ error: error.message });
+    console.error(error.message)
+    res.status(500).json({ error: 'Internal Server Error' });  
   }
 };
 

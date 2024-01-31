@@ -19,6 +19,7 @@ export interface Address {
 }
 export interface Order {
 	status: string;
+	order_number: string;
 	order_id: number;
 	products: Product[];
 	order_date: string;
