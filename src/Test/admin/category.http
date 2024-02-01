@@ -1,0 +1,21 @@
+POST http://localhost:3000/admin/category
+Content-Type: application/json
+Authorization:fadi
+
+{
+  "name": "naef",
+   "icon": "naef",
+    "image": "naef",
+    "image_mobile": "naef"
+}
+
+####
+PUT http://localhost:3000/admin/category/42
+Content-Type: application/json
+Authorization:fadi
+
+{
+  "name": "htrr",
+   "icon": "naef",
+    "image_mobile": "naef"
+}

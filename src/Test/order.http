@@ -1,0 +1,71 @@
+POST http://localhost:3000/orders
+Authorization: 4rpvjk2krzslmysvegcp
+Content-Type: application/json
+
+{
+  "order_address": {
+    "city": "Berlin",
+    "phone": "2595565892",
+    "street": "stugt St",
+    "country": "Germany",
+    "postal_code": "59784",
+    "address_line1": "ELK GROVE CA 95758",
+    "address_line2": " CA 95758"
+  },
+  "payment_method": "Credit Card"
+}
+###
+GET http://localhost:3000/orders/info/380
+Authorization: y06e3lmhet09xcguy8nj
+
+###
+GET http://localhost:3000/orders
+Authorization: y06e3lmhet09xcguy8nj
+###
+
+
+POST http://localhost:3000/orders/reorder/156
+Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+###
+
+PUT http://localhost:3000/orders/156/cancel
+Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+###
+
+
+
+
+POST http://158.176.7.102:3000/orders
+Authorization: Zxc3MTLHf08f8Fd8GBrc
+Content-Type: application/json
+
+{
+  "order_address": {
+    "full_name": "ahamad",
+    "city": "Berlin",
+    "phone": "2563335892",
+    "street": "stugt St",
+    "country": "Germany",
+    "postal_code": "59784",
+    "address_line1": "ELK GROVE CA 95758",
+    "address_line2": " CA 95758"
+  },
+  "payment_method": "Credit Card"
+}
+###
+GET http://158.176.7.102:3000/orders/info/1002
+Authorization: Zxc3MTLHf08f8Fd8GBrc
+
+###
+GET http://158.176.7.102:3000/orders
+Authorization: Zxc3MTLHf08f8Fd8GBrc
+###
+
+
+POST http://158.176.7.102:3000/orders/reorder/156
+Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+###
+
+PUT http://158.176.7.102:3000/orders/156/cancel
+Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+###

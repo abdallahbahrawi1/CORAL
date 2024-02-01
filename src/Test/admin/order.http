@@ -1,0 +1,39 @@
+GET  http://localhost:3000/admin/orders?status=cancelled&startDate=2024-01-02&endDate=2024-01-31&productId=2
+Content-Type: application/json
+Authorization:fadi
+###
+GET  http://localhost:3000/admin/orders?productId=2
+Content-Type: application/json
+Authorization:fadi
+###
+GET  http://localhost:3000/admin/orders?status=completed&categoryId=7&brandId=1
+Content-Type: application/json
+Authorization:fadi 
+
+###
+GET  http://localhost:3000/admin/orders?status=completed&sortBy=order_count_desc
+Content-Type: application/json
+Authorization:fadi  
+
+
+
+
+###
+GET  http://localhost:3000/admin/orders/brand?status=completed
+Content-Type: application/json
+Authorization:fadi  
+###
+GET  http://localhost:3000/admin/orders/category?status=completed&categoryId=2
+Content-Type: application/json
+Authorization:fadi  
+
+###
+GET  http://localhost:3000/admin/orders/category?status=cancelled
+Content-Type: application/json
+Authorization:fadi  
+
+
+###
+GET  http://localhost:3000/admin/orders/total?status=cancelled&startDate=2024-01-02&endDate=2024-01-31
+Content-Type: application/json
+Authorization:fadi  

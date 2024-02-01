@@ -10,7 +10,7 @@ import {
 } from "../Interfaces/userInterface";
 import db from "../Database/Models/index";
 import bcrypt from "bcrypt";
-import { generateRandomString } from "../Utils/utils";
+import { generateRandomString ,minutesToMilliseconds} from "../Utils/utils";
 
 export const createUser = async (
   input: CreateUserInput
@@ -122,10 +122,14 @@ export const checkSessionKey = async (
       where: { session_key: sessionKey },
     });
 
-    if (!session || session.expiry_date < new Date()) {
+    // if (!session || session.expiry_date < new Date()) {
+    //   throw { code: 403, message: "Invalid session Key." };
+    // }
+    
+    if (!session) {
       throw { code: 403, message: "Invalid session Key." };
     }
-
+    
     return session;
   } catch (error: any) {
     if (error.code) {
@@ -248,10 +252,23 @@ export const deleteUserAccount = async (
   }
 };
 
-export const uploadProfileImage = async (session: Session,file): Promise<boolean | ErrorResponse> => {
+// export const uploadProfileImage = async (session: Session,file): Promise<boolean | ErrorResponse> => {
+//   try {
+//     const updateImage = await db.users.update({ profile_image:`Uploads/${file.filename}`}, { where: { id: session.user_id } });
+//     return true;
+//   } catch (error: any) {
+//     if (error.code) {
+//       throw { code: error.code, message: error.message };
+//     } else {
+//       throw { code: 500, message: "Internal Server Error" };
+//     }
+//   }
+// };
+
+export const uploadProfileImage = async (session: Session,file) => {
   try {
-    const updateImage = await db.users.update({ profile_image:`uploads/${file.filename}`}, { where: { id: session.user_id } });
-    return true;
+    const updateImage = await db.users.update({ profile_image:`Uploads/${file.filename}`}, { where: { id: session.user_id } });
+    return `Uploads/${file.filename}`;
   } catch (error: any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
@@ -260,7 +277,6 @@ export const uploadProfileImage = async (session: Session,file): Promise<boolean
     }
   }
 };
-
 
 export const deleteExpiredSessions=async (): Promise<void>=>{
   try {
@@ -284,4 +300,18 @@ export const deleteExpiredSessions=async (): Promise<void>=>{
   }
 }
 
+
+export const extendSessionExpiry = async (sessionKey: string): Promise<void> => {
+  try {
+    const newExpiryDate = new Date(Date.now() + minutesToMilliseconds(60));
+    // Find the session in the database and update its expiry date
+    await db.sessions.update(
+      { expiry_date: newExpiryDate },
+      { where: { session_key: sessionKey } }
+    );
+  } catch (error: any) {
+    // Handle any errors during the update
+    throw { code: 500, message: "Internal Server Error" };
+  }
+};
 

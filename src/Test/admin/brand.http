@@ -1,0 +1,18 @@
+POST http://localhost:3000/admin/brands
+Content-Type: application/json
+Authorization:fadi
+
+{
+  "name": "Product Name",
+    "logo":"effwfwfwff"
+}
+
+###
+PUT http://localhost:3000/admin/brands/107
+Content-Type: application/json
+Authorization:fadi
+
+{
+  "name": "coefw",
+    "logo":"effwfwfwff"
+}

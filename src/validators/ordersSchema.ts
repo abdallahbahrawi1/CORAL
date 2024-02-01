@@ -11,13 +11,11 @@ export const AddOrderLocationAndPaymentSchema = Joi.object({
   order_address: Joi.object({
     full_name: Joi.string().required(),
     city: Joi.string().required(),
-    phone: Joi.string()
-    .pattern(/^(\+\d{1,3}[- ]?)?\d{10}$/)
-    .message("Please provide a valid mobile number")
-    .required(),    street: Joi.string().required(),
+    phone: Joi.string().pattern(/^(\+\d{1,3}[- ]?)?\d{10}$/).required(),
+    street: Joi.string().required(),
     country: Joi.string().required(),
-    postal_code: Joi.string().required(),
-    address_line1: Joi.string().required(),
+    postal_code: Joi.string(),
+    address_line1: Joi.string(),
     address_line2: Joi.string(),
   }).required(),
   payment_method: Joi.string().required(),

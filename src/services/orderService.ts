@@ -237,9 +237,7 @@ const calculateDiscountAmount = (product, discount) => {
 };
 
 const checkDiscountValidity = (expiryDate) => {
-  const currentDate = new Date();
-  const formattedCurrentDate = currentDate.toISOString().split('T')[0];
-  return formattedCurrentDate <= expiryDate;
+  return new Date() <= expiryDate;
 };
 //todo
 const getAddressObject = async (order) => {
@@ -363,4 +361,3 @@ export const removeAllItemsFromShoppingCart = async (userId: number, transaction
     throw { code: 500, message: `can't clear user ID ${userId} shopping cart`};
   }
 };
-

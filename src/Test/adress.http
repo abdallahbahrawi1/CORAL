@@ -1,0 +1,38 @@
+
+GET http://localhost:3000/addresses
+Authorization:eafi0uispesac0o2wrqx
+###
+GET http://localhost:3000/addresses/15
+Authorization:eafi0uispesac0o2wrqx
+###
+POST http://localhost:3000/addresses
+Content-Type: application/json
+Authorization:zG3vLifO2bXQHANGTiZNCdA43SZZDe
+
+{
+  "city": "jericho",
+    "phone": "555855258",
+    "street": "amman",
+    "country": "defwf",
+    "user_id": 1,
+    "postal_code": 54433,
+    "address_line1": "FWefwf",
+    "address_line2": "fewfwf"
+}
+
+###
+PUT http://localhost:3000/addresses/7
+Content-Type: application/json
+Authorization:eafi0uispesac0o2wrqx
+
+{
+  "city": "hrhrhrh",
+    "street": "thrhtrhrh",
+    "country": "ggrgrhgrg",
+    "postal_code": 433443333433,
+    "address_line2": "grhrhrh"
+}
+###
+DELETE  http://localhost:3000/addresses/101
+Authorization:zG3vLifO2bXQHANGTiZNCdA43SZZDe
+

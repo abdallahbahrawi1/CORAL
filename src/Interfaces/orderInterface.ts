@@ -22,6 +22,7 @@ export interface Order {
 	order_number: string;
 	order_id: number;
 	products: Product[];
+	order_number:string;
 	order_date: string;
 	total_amount: number;
 	total_discount: number;

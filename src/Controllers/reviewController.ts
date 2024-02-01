@@ -4,6 +4,7 @@ import { ReviewItem } from '../Interfaces/reviewInterface';
 import * as reviewService from '../Services/reviewService';
 import { reviewSchema } from '../Validators/reviewSchema';
 
+//allows user to post a review for a specfic product
 export const postReview = async (req: Request, res: Response) => {
   try {
     const { error, value } = reviewSchema.validate(req.body);
@@ -26,6 +27,7 @@ export const postReview = async (req: Request, res: Response) => {
   }
 };
 
+//allows user to update a review for a specfic product
 export const updateReview = async (req: Request, res: Response) => {
   try {
     const { error, value } = reviewSchema.validate(req.body);
@@ -48,6 +50,7 @@ export const updateReview = async (req: Request, res: Response) => {
   }
 };
 
+//allows user to delete a review for a specfic product
 export const deleteReview = async (req: Request, res: Response) => {
   try {
     const product_id = parseInt(req.params.product_id);
@@ -65,6 +68,7 @@ export const deleteReview = async (req: Request, res: Response) => {
   }
 };
 
+//allows user to get all his reviews on all products 
 export const getAllUserReviews = async (req: Request, res: Response) => {
   try {
     const reviews = await reviewService.getAllUserReviews(req.session.user_id);
