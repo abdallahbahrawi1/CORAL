@@ -7,7 +7,6 @@ export const placeOrderSchema = Joi.array().min(1).items(
   })
 );
 
-
 export const AddOrderLocationAndPaymentSchema = Joi.object({
   order_address: Joi.object({
     full_name: Joi.string().required(),

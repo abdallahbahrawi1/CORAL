@@ -1,6 +1,7 @@
 import db from '../Database/Models/index';
+import { Address } from '../Interfaces/addressInterface';
 
-export const addAddress = async (addressValues, userID, transaction = null) => {
+export const addAddress = async (addressValues: Address, userID: number, transaction = null) => {
   try {
     const { full_name, city, phone, street, country, postal_code, address_line1, address_line2 } = addressValues;
       return await db.addresses.create({
@@ -45,12 +46,12 @@ export const getAddressById = async (addressID: number, userID:number) => {
   }
 };
  
-export const deleteAddressById = async (userId: number, addressId: number) => {
+export const deleteAddressById = async (userID: number, addressId: number) => {
   try {
     const addressToDelete = await db.addresses.findOne({
       where: {
         id: addressId,
-        user_id: userId,
+        user_id: userID,
       },
     });
 
@@ -61,7 +62,7 @@ export const deleteAddressById = async (userId: number, addressId: number) => {
     const ordersWithAddress = await db.orders.findOne({
       where: { address_id: addressId },
     });
-
+    // soft delete: only delete the address from the user side, the location will be connected to the order if  there's an order, if not delete the  address completely 
     if (ordersWithAddress) {
       await addressToDelete.update({ user_id: null });
       return addressToDelete;
@@ -75,12 +76,12 @@ export const deleteAddressById = async (userId: number, addressId: number) => {
 };
 
 
-export const updateAddressById = async (userId: number, addressId: number, updatedAddressData) => {
+export const updateAddressById = async (userID: number, addressId: number, updatedAddressData: Address) => {
   try {
     const addressToUpdate = await db.addresses.findOne({
       where: {
         id: addressId,
-        user_id: userId,
+        user_id: userID,
       },
     });
 
@@ -95,11 +96,11 @@ export const updateAddressById = async (userId: number, addressId: number, updat
 };
 
 
-export const updatePreviousDefaultAddress = async (userId) => {
+export const updatePreviousDefaultAddress = async (userID: number) => {
   try {
     await db.addresses.update({ is_default: false }, {
       where: {
-        user_id: userId,
+        user_id: userID,
         is_default: true,
       },
     });
@@ -108,7 +109,7 @@ export const updatePreviousDefaultAddress = async (userId) => {
   }
 };
 
-export const setNewDefaultAddress = async (addressId) => {
+export const setNewDefaultAddress = async (addressId: number) => {
   try {
     await db.addresses.update({ is_default: true }, {
       where: { id: addressId },
@@ -118,18 +119,17 @@ export const setNewDefaultAddress = async (addressId) => {
   }
 };
 
-export const findDefaultAddress = async (userId) => {
+export const findDefaultAddress = async (userID: number) => {
   try {
     const defaultAddress = await db.addresses.findOne({
       where: {
-        user_id: userId,
+        user_id: userID,
         is_default: true,
       },
     });
 
     return defaultAddress;
   } catch (error) {
-    console.error('Error finding default address:', error);
     throw error;
   }
 };
