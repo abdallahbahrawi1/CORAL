@@ -1,34 +1,7 @@
 import db from '../Database/Models/index';
 import { ShoppingCartItem,ShoppingCart,ErrorResponse } from '../Interfaces/shoppingCartInterface';
 
-// export const getUserShoppingCart = async (userId: number): Promise<ShoppingCart[]|ErrorResponse > => {
-//   try {
-//     const shoppingCartItems = await db.shoppingCarts.findAll({ where: { user_id: userId },
-//       include: [
-//         {
-//           model: db.products,
-//           attributes: ['name', 'price', 'sub_title'],
-//           include: [
-//             {
-//               model: db.discounts,
-//               attributes: ['percentage'],
-//             },
-//             {
-//               model: db.productsImages,
-//               attributes: ['image_url'],
-//             },
-//           ],
-//         },
-//       ], });
-//     return shoppingCartItems;
-//   } catch (error:any) {
-//     if (error.code) {
-//       throw { code: error.code, message: error.message };
-//     } else {
-//       throw { code: 500, message: 'Internal Server Error' };
-//     }
-//   }
-// };
+
 function calculateDiscountedPrice(products) {
   let totalPriceBeforeDiscount = 0;
   let totalDiscount = 0;
@@ -37,29 +10,15 @@ function calculateDiscountedPrice(products) {
     const originalPrice = product.Product.price;
     const discountPercentage = product.Product.Discount.percentage;
     const quantity = product.quantity;
-
-    // Calculate total price before discount
     totalPriceBeforeDiscount += originalPrice * quantity;
-
-    // Calculate discount amount
     const discountAmount = (originalPrice * discountPercentage) / 100;
-
-    // Calculate total discount
     totalDiscount += discountAmount * quantity;
-
-    // Calculate price after discount
     const priceAfterDiscount = originalPrice - discountAmount;
-
-    // Update the product with the discounted price, discount, and subTotal
     product.Product.discountedPrice = priceAfterDiscount;
     product.discount = discountAmount * quantity;
     product.sub_total = priceAfterDiscount * quantity;
   }
-
-  // Calculate the total discounted price
   const totalDiscountedPrice = totalPriceBeforeDiscount - totalDiscount;
-
-  // Format each product in a new array
   const formattedProducts = products.map((product) => ({
     id: product.id,
     image_url: product.Product.ProductImages[0].image_url,
@@ -109,6 +68,7 @@ export const getUserShoppingCart = async (userId: number) => {
     }
   }
 };
+
 export const removeProductFromShoppingCart = async (
   userId: number,
   productId: number

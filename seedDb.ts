@@ -183,7 +183,6 @@ const mobileImagePaths = [
 
 const productImage = ['Images/Product/bag.png', 'Images/Product/brown.png', 'Images/Product/pink.png', 'Images/Product/duf.png'];
 
-// Function to generate fake categories with your own image paths
 const generateFakeCategory = (name, iconPaths, imagePaths, mobileImagePaths) => ({
   name,
   icon: getRandomPath(iconPaths),
@@ -191,22 +190,16 @@ const generateFakeCategory = (name, iconPaths, imagePaths, mobileImagePaths) => 
   image_mobile: getRandomPath(mobileImagePaths)
 });
 
-// Function to get a random path from an array
 const getRandomPath = pathArray => pathArray[Math.floor(Math.random() * pathArray.length)];
 
-// Generate fake categories with your own image paths
 const fakeCategories = commonCategories.map(category => generateFakeCategory(category, iconPaths, imagePaths, mobileImagePaths));
 
-// const generateFakeCategory = (name) => ({ name });
 
-// // Function to generate a fake brand
 const generateFakeBrand = (name, brandInmages) => ({
   name,
   logo: getRandomPath(logoImage)
 });
 
-// // Generate fake categories and brands
-// const fakeCategories = commonCategories.map(generateFakeCategory);
 const fakeBrands = commonBrands.map(brand => generateFakeBrand(brand, logoImage));
 
 const generateFakeDiscount = () => {
@@ -237,12 +230,6 @@ const generateFakeProducts = (creartedCategories, createdBrands, creartedDiscoun
   };
 };
 
-// const generateFakeProductsImages = (creartedProducts) => {
-//   return {
-//     image_url: faker.random.arrayElement(productImage),
-//     product_id:faker.random.arrayElement(creartedProducts.map((product) => product.id)),
-//   };
-// };
 
 const generateFakeUser = () => {
   return {
@@ -273,9 +260,8 @@ const generateFakeAddress = createdUsers => ({
   postal_code: faker.address.zipCode(),
   user_id: faker.random.arrayElement(createdUsers).id
 });
-const ratingProbabilities = [0.05, 0.1, 0.2, 0.3, 0.35]; // Adjust these probabilities as needed
+const ratingProbabilities = [0.05, 0.1, 0.2, 0.3, 0.35]; 
 
-// Generate a random rating based on probabilities
 const getRandomRating = () => {
   const rand = Math.random();
   let cumulativeProbability = 0;
@@ -283,11 +269,10 @@ const getRandomRating = () => {
   for (let i = 0; i < ratingProbabilities.length; i++) {
     cumulativeProbability += ratingProbabilities[i];
     if (rand <= cumulativeProbability) {
-      return i + 1; // Ratings are 1-indexed
+      return i + 1; 
     }
   }
 
-  // In case of rounding errors or if probabilities don't sum up to 1
   return ratingProbabilities.length;
 };
 
@@ -315,28 +300,7 @@ const generateFakeShoppinglist = (createdProducts, createdUsers) => {
     user_id: faker.random.arrayElement(createdUsers.map(user => user.id))
   };
 };
-// const generateOrders = (createdUsers, createdAdresses,createdProducts) => {
-  // const orderDate = 
-  // );
 
-  // return {
-  //   order_number: generateOrderNumber(),
-  //   status: faker.random.arrayElement(['completed', 'processing', 'cancelled']),
-  //   payment_method: faker.random.arrayElement(['card', 'cash', 'paypal', 'bank_transfer', 'crypto']),
-  //   user_id: faker.random.arrayElement(createdUsers).id,
-  //   address_id: faker.random.arrayElement(createdAdresses).id,
-  //   order_date: orderDate,
-  //   orderItems: Array.from({ length: faker.random.number({ min: 1, max: 10 }) }, () => {
-  //     const createdAtForOrderItem = orderDate; // Use the same orderDate for orderItems
-  //     return {
-  //       quantity: faker.random.number({ min: 1, max: 50 }),
-  //       price: faker.commerce.price(),
-  //       product_id: faker.random.arrayElement(createdProducts.map(product => product.id)),
-  //       createdAt: createdAtForOrderItem
-  //     };
-  //   })
-  // };
-// };
 const generateOrders = (createdUsers, createdAdresses) => {
   return {
     order_number: generateOrderNumber(),
@@ -411,9 +375,6 @@ export const populateDatabase = async () => {
     // Generate and insert fake data for Orders
     const fakeOrders = Array.from({ length: 1000 }, () => generateOrders(createdUsers, createdAdresses));
     const createdOrders = await db.orders.bulkCreate(fakeOrders, { returning: true });
-    // Generate and insert fake data for OrderItems
-    // const fakeOrderItems = Array.from({ length: 5000 }, () => generateOrderItems(createdProducts, createdOrders));
-    // const createdOrderItems = await db.ordersItems.bulkCreate(fakeOrderItems, { returning: true });
     const fakeOrderItems = createdOrders.flatMap(order => 
       Array.from({ length: 5 }, () => generateOrderItems(createdProducts, order.order_date, order.id))
     );

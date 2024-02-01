@@ -122,6 +122,8 @@ export const checkSessionKey = async (
       where: { session_key: sessionKey },
     });
 
+    // I left this in case to was needed at some point 
+
     // if (!session || session.expiry_date < new Date()) {
     //   throw { code: 403, message: "Invalid session Key." };
     // }
@@ -252,18 +254,6 @@ export const deleteUserAccount = async (
   }
 };
 
-// export const uploadProfileImage = async (session: Session,file): Promise<boolean | ErrorResponse> => {
-//   try {
-//     const updateImage = await db.users.update({ profile_image:`Uploads/${file.filename}`}, { where: { id: session.user_id } });
-//     return true;
-//   } catch (error: any) {
-//     if (error.code) {
-//       throw { code: error.code, message: error.message };
-//     } else {
-//       throw { code: 500, message: "Internal Server Error" };
-//     }
-//   }
-// };
 
 export const uploadProfileImage = async (session: Session,file) => {
   try {
@@ -280,14 +270,12 @@ export const uploadProfileImage = async (session: Session,file) => {
 
 export const deleteExpiredSessions=async (): Promise<void>=>{
   try {
-    // Find sessions that have already expired
     const expiredSessions = await db.sessions.findAll({
       where: {
         expiry_date: { [db.Sequelize.Op.lt]: new Date() },
       },
     });
 
-    // Delete the expired sessions
     await db.sessions.destroy({
       where: {
         expiry_date: { [db.Sequelize.Op.lt]: new Date() },
@@ -304,13 +292,11 @@ export const deleteExpiredSessions=async (): Promise<void>=>{
 export const extendSessionExpiry = async (sessionKey: string): Promise<void> => {
   try {
     const newExpiryDate = new Date(Date.now() + minutesToMilliseconds(60));
-    // Find the session in the database and update its expiry date
     await db.sessions.update(
       { expiry_date: newExpiryDate },
       { where: { session_key: sessionKey } }
     );
   } catch (error: any) {
-    // Handle any errors during the update
     throw { code: 500, message: "Internal Server Error" };
   }
 };

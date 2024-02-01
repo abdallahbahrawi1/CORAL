@@ -3,7 +3,7 @@ module.exports = (sequelize, DataTypes) => {
         
         rating: {
             type: DataTypes.INTEGER,
-            allowNull: true, //make sure to ask
+            allowNull: true, 
                 validate: {
                     isInt: {
                     msg: "Rating must be an integer.",

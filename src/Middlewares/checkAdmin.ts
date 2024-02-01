@@ -22,7 +22,6 @@ export const checkAdmin = async (
       authorizationHeader
     )) as Session;
     if (result && result.expiry_date > new Date()) {
-      // If the session is valid, update the expiration date in the database
       await adminService.extendSessionExpiry(authorizationHeader);}
     req.session = result;
 
