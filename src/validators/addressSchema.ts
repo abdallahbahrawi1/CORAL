@@ -19,7 +19,7 @@ export const updateAddressSchema = Joi.object({
     country: Joi.string(),
     city: Joi.string(),
     street: Joi.string(),
-    phone: Joi.string().pattern(/^[0-9]{5}-[0-9]{7}$/),
+    phone: Joi.string().pattern(/^(\+\d{1,3}[- ]?)?\d{10}$/),
     address_line1: Joi.string(),
     address_line2: Joi.string(),
     postal_code: Joi.string(),

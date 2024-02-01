@@ -40,7 +40,7 @@ export const updateUserSchema = Joi.object({
   first_name: Joi.string(),
   last_name: Joi.string(),
   mobile: Joi.string()
-    .pattern(/^(\+\d{1,3}[- ]?)?(\d{3}[- ]?)?\d{4}[- ]?\d{3}$/)
+    .pattern(/^(\+\d{1,3}[- ]?)?\d{10}$/)
     .message("Please provide a valid mobile number"),
   birth_date: Joi.string()
     .isoDate() // Validate as an ISO date (YYYY-MM-DD)

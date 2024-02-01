@@ -10,4 +10,4 @@ GET http://localhost:3000/search?keyword=fr
 ### API
 GET http://158.176.7.102:3000/search/suggestions?keyword=aw
 ###
-GET http://158.176.7.102:3000/search?keyword=Awesome Steel Mouse
+GET http://158.176.7.102:3000/search?keyword=Awesome
