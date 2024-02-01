@@ -93,7 +93,6 @@ const handleRequest = async (options: ProductQueryOptions,searchInput?:string) =
       data: result.slice((options.page - 1) * options.pageSize, (options.page - 1) * options.pageSize + options.pageSize),
     };
   } catch (error) {
-    console.error(error);
     throw new Error('Internal Server Error');
   }
 };
@@ -103,7 +102,6 @@ export const getNewArrivals = async (options: ProductQueryOptions): Promise<Pagi
     const result = await handleRequest(options);
     return result;
   } catch (error) {
-    console.error(error);
     throw new Error('Internal Server Error');
   }
 };
@@ -113,7 +111,6 @@ export const getProducts = async (options: ProductQueryOptions): Promise<Paginat
     const result = await handleRequest(options);
     return result;
   } catch (error) {
-    console.error(error);
     throw new Error('Internal Server Error');
   }
 };
@@ -123,7 +120,6 @@ export const getLimitProducts = async (options: ProductQueryOptions): Promise<Pa
     const result = await handleRequest(options);
     return result;
   } catch (error) {
-    console.error(error);
     throw new Error('Internal Server Error');
   }
 };
@@ -145,7 +141,47 @@ export const getDiscountPlusProducts = async (options: ProductQueryOptions): Pro
     const result = await handleRequest({ ...options, include });
     return result;
   } catch (error) {
-    console.error(error);
+    throw new Error('Internal Server Error');
+  }
+};
+
+export const getTrendyProducts = async (options: ProductQueryOptions): Promise<PaginatedProductList> => {
+  try { const result = await db.products.findAll({
+    attributes: [
+      'id',
+      'name',
+      'sub_title',
+      'price',
+      [Sequelize.fn('SUM', Sequelize.col('OrderItems.quantity')), 'quantity_sold'],
+      [Sequelize.fn('COUNT', Sequelize.col('OrderItems.id')), 'order_count'],
+      [db.sequelize.fn('AVG', db.sequelize.col('Reviews.rating')), 'average_rating'],
+      [db.sequelize.fn('COUNT', db.sequelize.col('Reviews.rating')), 'rating_count'],
+    ],
+    include: [
+      {
+        model: db.ordersItems,
+        as: 'OrderItems',
+        attributes:[]
+      },
+      {
+        model: db.reviews,
+        attributes: [],
+      },
+      {
+        model: db.discounts,
+        attributes: ['percentage'],
+      },
+      {
+        model: db.productsImages,
+        attributes: ['image_url'],
+        limit: 1,
+      },
+    ],
+    group: ['Product.id'],
+
+  })
+    return result;
+  } catch (error) {
     throw new Error('Internal Server Error');
   }
 };
@@ -155,7 +191,6 @@ export const getPopularProducts = async (options: ProductQueryOptions): Promise<
     const result = await handleRequest(options);
     return result;
   } catch (error) {
-    console.error(error);
     throw new Error('Internal Server Error');
   }
 };
@@ -165,7 +200,6 @@ export const handPickedProducts = async (options: ProductQueryOptions): Promise<
     const result = await handleRequest(options);
     return result;
   } catch (error) {
-    console.error(error);
     throw new Error('Internal Server Error');
   }
 };
@@ -175,7 +209,6 @@ export const getSearchResults  = async (options: ProductQueryOptions,searchInput
     const result = await handleRequest(options,searchInput);
     return result;
   } catch (error) {
-    console.error(error);
     throw new Error('Internal Server Error');
   }
 };
@@ -204,7 +237,6 @@ export const getSuggestions  = async (searchInput):Promise<SuggestionResult> => 
     return { products, brands };
   
   } catch (error) {
-    console.error(error);
     throw new Error('Internal Server Error');
   }}
 export const getProductDetails = async (requested_id):Promise<ProductDetails> => {
@@ -232,11 +264,11 @@ export const getProductDetails = async (requested_id):Promise<ProductDetails> =>
           },
           {
             model: db.brands,
-            attributes: ['name']
+            attributes: ['name','id']
           },
           {
             model: db.categories,
-            attributes: ['name']
+            attributes: ['name','id']
           },
         
         ],

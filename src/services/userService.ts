@@ -252,10 +252,23 @@ export const deleteUserAccount = async (
   }
 };
 
-export const uploadProfileImage = async (session: Session,file): Promise<boolean | ErrorResponse> => {
+// export const uploadProfileImage = async (session: Session,file): Promise<boolean | ErrorResponse> => {
+//   try {
+//     const updateImage = await db.users.update({ profile_image:`Uploads/${file.filename}`}, { where: { id: session.user_id } });
+//     return true;
+//   } catch (error: any) {
+//     if (error.code) {
+//       throw { code: error.code, message: error.message };
+//     } else {
+//       throw { code: 500, message: "Internal Server Error" };
+//     }
+//   }
+// };
+
+export const uploadProfileImage = async (session: Session,file) => {
   try {
-    const updateImage = await db.users.update({ profile_image:`uploads/${file.filename}`}, { where: { id: session.user_id } });
-    return true;
+    const updateImage = await db.users.update({ profile_image:`Uploads/${file.filename}`}, { where: { id: session.user_id } });
+    return `Uploads/${file.filename}`;
   } catch (error: any) {
     if (error.code) {
       throw { code: error.code, message: error.message };
@@ -264,7 +277,6 @@ export const uploadProfileImage = async (session: Session,file): Promise<boolean
     }
   }
 };
-
 
 export const deleteExpiredSessions=async (): Promise<void>=>{
   try {

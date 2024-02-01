@@ -69,9 +69,9 @@ POST http://158.176.7.102:3000/users/signup
 Content-Type: application/json
 
 {
-  "username": "t33jbjjkbyr",
-  "email": "jjknnn@example.com",
-  "password": "Mh&55r58r55",
+  "username": "fadiH",
+  "email": "fadih@example.com",
+  "password": "Fadi@123",
   "first_name": "John",
   "last_name": "Doe",
   "mobile": "1234567890",
@@ -91,16 +91,18 @@ Authorization:VFj4M8AdnfvKWtpePZjqz7BwB4tLWX
 ###
 #INFORMATION
 GET http://158.176.7.102:3000/users/53
-Authorization:Fvv8CcldmiDF9U5IZPd5
+Authorization:SJtNn4T39zy1jqOmxkJH
 ###
 #UPDATE INFORMATION
-PUT http://158.176.7.102:3000/users/54
+PUT http://158.176.7.102:3000/users/45
 Content-Type: application/json
-Authorization:ZUbzQ3jHm5ZBfeWzUAa3
+Authorization:SJtNn4T39zy1jqOmxkJH
 
 {
-  "first_name": "ukuukuku",
-  "birth_date": "1997-01-01T00:00:00.000Z"
+  "first_name": "bat5ya",
+  "last_name": "fefefeffefe",
+  "mobile": "5687657557",
+  "birth_date": "1990-01-01"
 }
 ###
 #DELETE USER ACCOUNT 
@@ -109,11 +111,11 @@ Authorization:YrDWOklpKkaWl2OUTcH9lLTk5pacUc
 ###
 PUT http://158.176.7.102:3000/users/change-password
 Content-Type: application/json
-Authorization:1X63hhGJXtAvMFNS05ZD
+Authorization:GuVO24udZC3R7ufHYxaz
 
 {
   "currentPassword":"Mh&55r58r55",
-  "newPassword":"Mh&55r58r55444444"
+  "newPassword":"Mhwww&55r58r55444444"
 }
 
 ###

@@ -10,25 +10,19 @@ import wishlistRoute from './src/Routers/wishlistRoute';
 import ordersRoute from './src/Routers/ordersRoute';
 import shoppingCartRoute from './src/Routers/shoppingCartRoute';
 import adminRoutes from './src/Routers/adminRoutes';
-
 import {checkAdmin} from './src/Middlewares/checkAdmin';
 
 import {checkSessionKey} from './src/Middlewares/checkSession';
 
 import cors from 'cors';
-
 const app = express();
+
 const port = process.env.PORT || 3000;
-app.use(cors({
-  origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true, 
-}));
+app.use(cors());
 
 app.use(express.json())
-app.use('/uploads', express.static('uploads'));
+app.use('/Uploads', express.static('./Uploads'));
 app.use('/Images',express.static('./src/Images'))
-app.use('/Images',express.static('./src/images'))
 app.use('/users', usersRoute);
 app.use('/addresses',checkSessionKey,addressesRoute);
 app.use('/reviews',checkSessionKey,reviewsRoute);

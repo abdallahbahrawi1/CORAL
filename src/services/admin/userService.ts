@@ -62,22 +62,7 @@ const applyCreatedAtFilter = (filters) => {
   return {};
 };
 
-// const applyLoginSessionFilter = (filters) => {
-//   if (filters.loginStartDate && filters.loginEndDate) {
-//     return {
-//       model: db.sessions,
-//       attributes: [],
-//       where: {
-//         session_key: { [Op.not]: null },
-//         expiry_date: {
-//           [Op.between]: [new Date(filters.loginStartDate), new Date(filters.loginEndDate)],
-//         },
-//       },
-//     };
-//   }
 
-//   return {};
-// };
 const applyLoginSessionFilter = (filters) => {
   if (filters.loginStartDate && filters.loginEndDate) {
     return {
@@ -107,7 +92,6 @@ export const getUsers = async (filters: any) => {
               model: db.addresses,
               attributes: ['city', 'country', 'postal_code'],
             },
-            // applyLoginSessionFilter(filters),
           ],
           where: {
             [Op.and]: [
@@ -115,7 +99,6 @@ export const getUsers = async (filters: any) => {
               ...applyAddressFilters(filters),
               applyAgeFilter(filters),
               applyCreatedAtFilter(filters),
-              // Add more conditions based on other filters
             ],
           },
         });

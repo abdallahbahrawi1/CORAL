@@ -1,11 +1,9 @@
 POST http://localhost:3000/orders
-Authorization: uYn82mfG6X0gIDtSIhfN5wBcq697Cz
+Authorization: 4rpvjk2krzslmysvegcp
 Content-Type: application/json
 
 {
   "order_address": {
-    "first_name": "fdsf",
-    "last_name": "lafdsfe",
     "city": "Berlin",
     "phone": "2595565892",
     "street": "stugt St",
@@ -17,12 +15,12 @@ Content-Type: application/json
   "payment_method": "Credit Card"
 }
 ###
-GET http://localhost:3000/orders/info/11
-Authorization: uYn82mfG6X0gIDtSIhfN5wBcq697Cz
+GET http://localhost:3000/orders/info/380
+Authorization: y06e3lmhet09xcguy8nj
 
 ###
 GET http://localhost:3000/orders
-Authorization: uYn82mfG6X0gIDtSIhfN5wBcq697Cz
+Authorization: y06e3lmhet09xcguy8nj
 ###
 
 
@@ -38,15 +36,14 @@ Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
 
 
 POST http://158.176.7.102:3000/orders
-Authorization: yj7xu3d0d8x0eoi5n30n
+Authorization: Zxc3MTLHf08f8Fd8GBrc
 Content-Type: application/json
 
 {
   "order_address": {
-    "first_name": "fdsf",
-    "last_name": "lafdsfe",
+    "full_name": "ahamad",
     "city": "Berlin",
-    "phone": "2565892",
+    "phone": "2563335892",
     "street": "stugt St",
     "country": "Germany",
     "postal_code": "59784",
@@ -56,12 +53,12 @@ Content-Type: application/json
   "payment_method": "Credit Card"
 }
 ###
-GET http://158.176.7.102:3000/orders/info/1
-Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+GET http://158.176.7.102:3000/orders/info/1002
+Authorization: Zxc3MTLHf08f8Fd8GBrc
 
 ###
 GET http://158.176.7.102:3000/orders
-Authorization: eb9azj7s25ua77kyinkm
+Authorization: Zxc3MTLHf08f8Fd8GBrc
 ###
 
 

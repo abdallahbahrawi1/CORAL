@@ -1,4 +1,8 @@
-GET  http://localhost:3000/admin/orders?status=cancelled&startDate=2024-01-02&endDate=2024-01-31
+GET  http://localhost:3000/admin/orders?status=cancelled&startDate=2024-01-02&endDate=2024-01-31&productId=2
+Content-Type: application/json
+Authorization:fadi
+###
+GET  http://localhost:3000/admin/orders?productId=2
 Content-Type: application/json
 Authorization:fadi
 ###

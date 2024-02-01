@@ -2,11 +2,7 @@ module.exports = (sequelize, DataTypes) => {
   const Address = sequelize.define(
     "Address",
     {
-      first_name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      last_name: {
+      full_name: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -37,14 +33,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       address_line1: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
       address_line2: {
         type: DataTypes.STRING,
       },
       postal_code: {
         type: DataTypes.STRING,
-        allowNull: false,
       },
       is_default: {
         type: DataTypes.BOOLEAN,

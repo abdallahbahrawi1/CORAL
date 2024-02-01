@@ -255,12 +255,15 @@ const generateFakeUser = () => {
     birth_date: faker.date.between(
       new Date(new Date().setFullYear(new Date().getFullYear() - 80)),
       new Date(new Date().setFullYear(new Date().getFullYear() - 12))
+    ),
+    createdAt: faker.date.between(
+      new Date(new Date().setFullYear(new Date().getFullYear() - 3)),
+      new Date(new Date().setFullYear(new Date().getFullYear() ))
     )
   };
 };
 const generateFakeAddress = createdUsers => ({
-  first_name: faker.name.firstName(),
-  last_name: faker.name.lastName(),
+  full_name: faker.name.firstName() + " " +faker.name.lastName(),
   country: faker.address.country(),
   city: faker.address.city(),
   street: faker.address.streetName(),
@@ -312,23 +315,48 @@ const generateFakeShoppinglist = (createdProducts, createdUsers) => {
     user_id: faker.random.arrayElement(createdUsers.map(user => user.id))
   };
 };
+// const generateOrders = (createdUsers, createdAdresses,createdProducts) => {
+  // const orderDate = 
+  // );
 
+  // return {
+  //   order_number: generateOrderNumber(),
+  //   status: faker.random.arrayElement(['completed', 'processing', 'cancelled']),
+  //   payment_method: faker.random.arrayElement(['card', 'cash', 'paypal', 'bank_transfer', 'crypto']),
+  //   user_id: faker.random.arrayElement(createdUsers).id,
+  //   address_id: faker.random.arrayElement(createdAdresses).id,
+  //   order_date: orderDate,
+  //   orderItems: Array.from({ length: faker.random.number({ min: 1, max: 10 }) }, () => {
+  //     const createdAtForOrderItem = orderDate; // Use the same orderDate for orderItems
+  //     return {
+  //       quantity: faker.random.number({ min: 1, max: 50 }),
+  //       price: faker.commerce.price(),
+  //       product_id: faker.random.arrayElement(createdProducts.map(product => product.id)),
+  //       createdAt: createdAtForOrderItem
+  //     };
+  //   })
+  // };
+// };
 const generateOrders = (createdUsers, createdAdresses) => {
   return {
     order_number: generateOrderNumber(),
     status: faker.random.arrayElement(['completed', 'processing', 'cancelled']),
     payment_method: faker.random.arrayElement(['card', 'cash', 'paypal', 'bank_transfer', 'crypto']),
     user_id: faker.random.arrayElement(createdUsers).id,
-    address_id: faker.random.arrayElement(createdAdresses).id
+    address_id: faker.random.arrayElement(createdAdresses).id,
+    order_date:faker.date.between(
+      new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+      new Date(new Date().setFullYear(new Date().getFullYear())))
   };
 };
 
-const generateOrderItems = (createdProducts, createdOrders) => {
+const generateOrderItems = (createdProducts,orderDate, orderId) => {
   return {
     quantity: faker.random.number({ min: 1, max: 50 }),
     price: faker.commerce.price(),
     product_id: faker.random.arrayElement(createdProducts.map(product => product.id)),
-    order_id: faker.random.arrayElement(createdOrders.map(order => order.id))
+    order_id: orderId,
+    createdAt:orderDate
   };
 };
 const generateFakeSession = createdUsers => {
@@ -338,7 +366,7 @@ const generateFakeSession = createdUsers => {
   return {
     session_key: faker.random.alphaNumeric(20),
     user_id: faker.random.arrayElement(createdUsers.map(user => user.id)),
-    expiry_date: minutesLater
+    expiry_date: minutesLater,
   };
 };
 
@@ -384,9 +412,14 @@ export const populateDatabase = async () => {
     const fakeOrders = Array.from({ length: 1000 }, () => generateOrders(createdUsers, createdAdresses));
     const createdOrders = await db.orders.bulkCreate(fakeOrders, { returning: true });
     // Generate and insert fake data for OrderItems
-    const fakeOrderItems = Array.from({ length: 5000 }, () => generateOrderItems(createdProducts, createdOrders));
+    // const fakeOrderItems = Array.from({ length: 5000 }, () => generateOrderItems(createdProducts, createdOrders));
+    // const createdOrderItems = await db.ordersItems.bulkCreate(fakeOrderItems, { returning: true });
+    const fakeOrderItems = createdOrders.flatMap(order => 
+      Array.from({ length: 5 }, () => generateOrderItems(createdProducts, order.order_date, order.id))
+    );
+    
+    // Bulk create fake order items
     const createdOrderItems = await db.ordersItems.bulkCreate(fakeOrderItems, { returning: true });
-
     // Generate and insert fake data for Sessions
     const fakeSessions = Array.from({ length: 200 }, () => generateFakeSession(createdUsers));
     const createdSessions = await db.sessions.bulkCreate(fakeSessions, { returning: true });

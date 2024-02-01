@@ -205,7 +205,6 @@ export const getTotalByBrand = async (options) => {
 
     return result;
   } catch (error) {
-    console.error(error);
     throw new Error('Internal Server Error');
   }
 };
@@ -263,7 +262,6 @@ export const getTotalByCategory = async (options) => {
 
     return result;
   } catch (error) {
-    console.error(error);
     throw new Error('Internal Server Error');
   }
 };
@@ -358,71 +356,151 @@ export const getTotalByCategory = async (options) => {
 
 
 
+// export const getOrderItemAnalytics = async (options) => {
+//   try {
+//     const { productId,status, startDate, endDate, brandId, categoryId ,sortOptions } = options;
+//     const dateCondition = startDate && endDate ? { [Op.between]: [startDate, endDate] } : {};
+
+//     const result = await db.products.findAll({
+//       attributes: [
+//         'id',
+//         'name',
+//         [Sequelize.fn('SUM', Sequelize.col('OrderItems.quantity')), 'quantity_sold'],
+//         [Sequelize.fn('COUNT', Sequelize.col('OrderItems.id')), 'order_count'],
+//         [Sequelize.fn('SUM', Sequelize.literal('`OrderItems`.`price` * `OrderItems`.`quantity`')), 'total_before_discount'],
+//         [
+//           Sequelize.literal('SUM(OrderItems.price * OrderItems.quantity * (1 - Discount.percentage / 100))'),
+//           'total_sales',
+//         ]
+//       ],
+//       include: [
+//         {
+//           model: db.ordersItems,
+//           as: 'OrderItems',
+//           where: {
+//             ...(startDate && endDate && { createdAt: dateCondition}),
+//           },
+//           attributes: [],
+//           include: [
+//             {
+//               model: db.orders,
+//               attributes: [],
+//               where: {
+//                 status,
+//                 ...(startDate && endDate && { order_date: dateCondition})
+                
+//               },
+//             },
+//           ],
+//         },
+//         {
+//           model: db.brands,
+//           as: 'Brand',
+//           attributes: ['name'],
+//           where: brandId ? { id: brandId } : {},
+//         },
+//         {
+//           model: db.categories,
+//           as: 'Category',
+//           attributes: ['name'],
+//           where: categoryId ? { id: categoryId } : {},
+//         },
+//         {
+//           model: db.discounts,
+//           as: 'Discount',
+//           attributes: [],
+//         },
+//       ],
+//       where: {
+//         [Op.and]: [
+//           brandId ? { brand_id: brandId } : {},
+//           categoryId ? { category_id: categoryId } : {},
+//           productId ? { id: productId } : {},
+//         ],
+//       },
+      
+//       group: ['Product.id'],
+//       order: commonSortOptions[sortOptions],
+//       raw: true,
+//     });
+
+//     return result;
+//   } catch (error) {
+//     console.error(error);
+//     throw new Error('Internal Server Error');
+//   }
+// };
+
 export const getOrderItemAnalytics = async (options) => {
   try {
-    const { productId,status, startDate, endDate, brandId, categoryId ,sortOptions } = options;
+    const { productId, status, startDate, endDate, brandId, categoryId, sortOptions } = options;
     const dateCondition = startDate && endDate ? { [Op.between]: [startDate, endDate] } : {};
 
-    const result = await db.products.findAll({
+    const result = await db.orders.findAll({
       attributes: [
         'id',
-        'name',
-        [Sequelize.fn('SUM', Sequelize.col('OrderItems.quantity')), 'quantity_sold'],
+        [Sequelize.fn('SUM', Sequelize.col('OrderItems.quantity')), 'total_quantity'],
         [Sequelize.fn('COUNT', Sequelize.col('OrderItems.id')), 'order_count'],
         [Sequelize.fn('SUM', Sequelize.literal('`OrderItems`.`price` * `OrderItems`.`quantity`')), 'total_before_discount'],
-        [
-          Sequelize.literal('SUM(OrderItems.price * OrderItems.quantity * (1 - Discount.percentage / 100))'),
-          'total_sales',
-        ]
+        // [ Sequelize.literal('SUM(OrderItems.price * OrderItems.quantity * (1 - OrderItems.Product.Discount.percentage / 100))'),'total_sales'],
+        [Sequelize.col('Address.country'), 'countryff']
       ],
+    
       include: [
         {
           model: db.ordersItems,
           as: 'OrderItems',
-          where: {
-            ...(startDate && endDate && { createdAt: dateCondition}),
-          },
           attributes: [],
           include: [
             {
-              model: db.orders,
+              model: db.products,
+              as: 'Product',
               attributes: [],
               where: {
-                status,
-                ...(startDate && endDate && { order_date: dateCondition})
-                
+                [Op.and]: [
+                  { id: productId },
+                  brandId ? { brand_id: brandId } : {},
+                  categoryId ? { category_id: categoryId } : {},
+                ],
               },
+              include: [
+                {
+                  model: db.discounts,
+                  as: 'Discount',
+                  attributes: ['percentage'],
+                },
+                {
+                  model: db.brands,
+                  as: 'Brand',
+                  attributes: ['name'],
+                },
+                {
+                  model: db.categories,
+                  as: 'Category',
+                  attributes: ['name'],
+                },
+              ],
             },
           ],
         },
-        {
-          model: db.brands,
-          as: 'Brand',
-          attributes: ['name'],
-          where: brandId ? { id: brandId } : {},
-        },
-        {
-          model: db.categories,
-          as: 'Category',
-          attributes: ['name'],
-          where: categoryId ? { id: categoryId } : {},
-        },
-        {
-          model: db.discounts,
-          as: 'Discount',
-          attributes: [],
-        },
+        
+            {
+              model: db.addresses,
+              as: 'Address',
+              attributes: ['country'],
+            },
       ],
       where: {
+        status,
+        ...(startDate && endDate && { order_date: dateCondition }),
         [Op.and]: [
-          brandId ? { brand_id: brandId } : {},
-          categoryId ? { category_id: categoryId } : {},
-          productId ? { id: productId } : {},
+          brandId ? { '$OrderItems.Product.Brand.id$': brandId } : {},
+          categoryId ? { '$OrderItems.Product.Category.id$': categoryId } : {},
+          productId ? { '$OrderItems.Product.id$': productId } : {},
         ],
       },
-      
-      group: ['Product.id'],
-      order: commonSortOptions[sortOptions],
+      group: ['Address.country', 'OrderItems.Product.id', 'Order.id'],
+      order: [['total_quantity', 'DESC']],
       raw: true,
     });
 

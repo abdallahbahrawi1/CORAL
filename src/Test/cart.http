@@ -1,25 +1,25 @@
 ### LOCALHOST
 GET http://localhost:3000/shopping-cart
-Authorization:uYn82mfG6X0gIDtSIhfN5wBcq697Cz
+Authorization:n7ctob8gb6t2ix35geid
 ###
 POST http://localhost:3000/shopping-cart/add
 Content-Type: application/json
-Authorization:jhxngj9lviqdaovlwao8
+Authorization:xehRHkw969uLGwERW7DfyeHJ5ngjTq
 
  
 {
   "product_id": 4,
-  "quantity": 1
+  "quantity": 2
 }
 ###
 PUT http://localhost:3000/shopping-cart/update
 Content-Type: application/json
-Authorization:jhxngj9lviqdaovlwao8
+Authorization:n7ctob8gb6t2ix35geid
 
  
 {
   "product_id": 4,
-  "quantity": 52
+  "quantity": 2
 }
 ###
 DELETE http://localhost:3000/shopping-cart/remove/1
@@ -38,21 +38,21 @@ Authorization:xav3bdotvybcjhfl4ux5
 
 ### API
 GET http://158.176.7.102:3000/shopping-cart
-Authorization:xav3bdotvybcjhfl4ux5
+Authorization:Zxc3MTLHf08f8Fd8GBrc
 ###
 POST http://158.176.7.102:3000/shopping-cart/add
 Content-Type: application/json
-Authorization:xav3bdotvybcjhfl4ux5
+Authorization:xehRHkw969uLGwERW7DfyeHJ5ngjTq
 
  
 {
-  "product_id": 1,
-  "quantity": 100
+  "product_id": 55,
+  "quantity": 3
 }
 ###
 PUT http://158.176.7.102:3000/shopping-cart/update
 Content-Type: application/json
-Authorization:xav3bdotvybcjhfl4ux5
+Authorization:63gaxejbvdm86yu9c893
 
  
 {
