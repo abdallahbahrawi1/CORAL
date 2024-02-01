@@ -1,5 +1,5 @@
 import db from '../../Database/Models/index';
-import { Op } from 'sequelize';
+import { Op, Sequelize } from 'sequelize';
 
 
 interface ProductData {
@@ -38,19 +38,89 @@ interface ProductData {
     }
   };
   
-  export const deleteProduct = async (productId: number) => {
+  export const getTopProductsByCountry = async (countryFilter) => {
     try {
-      const product = await db.products.findByPk(productId);
-  
-      if (!product) {
-        throw new Error('Product not found');
-      }
-  
-      await product.destroy();
-      return { message: 'Product deleted successfully' };
+
+      const query = `
+      WITH cte_top_products AS (
+        SELECT
+          a.country,
+          oi.product_id,
+          SUM(oi.quantity) as total_quantity,
+          ROW_NUMBER() OVER (PARTITION BY a.country ORDER BY SUM(oi.quantity) DESC) as row_num
+        FROM
+          orders o
+          JOIN addresses a ON a.id = o.address_id
+          JOIN orderitems oi ON oi.order_id = o.id
+        GROUP BY
+          a.country,
+          oi.product_id
+      )
+      SELECT
+        country,
+        product_id,
+        total_quantity
+      FROM
+        cte_top_products
+      WHERE
+        row_num <= 3
+        ${countryFilter ? `AND country = :country` : ''}
+      ORDER BY
+        country,
+        total_quantity DESC;
+      `;
+      
+      const result = await db.sequelize.query(query, {
+        type: db.sequelize.QueryTypes.SELECT,
+        nest: true,
+        replacements: {
+          country: countryFilter,
+        },
+      });
+      
+      return result;
     } catch (error) {
-      throw new Error(`Error in deleteProduct: ${error.message}`);
+      console.error(error);
+      throw new Error('Internal Server Error');
     }
   };
 
+
+  export const getTopCountriesForProduct = async (productId,status) => {
+    try {
+      const result = await db.ordersItems.findAll({
+        attributes: [
+          [Sequelize.fn('SUM', Sequelize.col('quantity')), 'total_quantity'],
+        ],
+        include: [
+          {
+            model: db.orders,
+            as: 'Order',
+            where: {
+              status,
+            },
+            attributes: [],
+            include: [
+              {
+                model: db.addresses,
+                as: 'Address',
+                attributes:  ['country'],
+              },
+            ],
+          },
+        ],
+        where: {
+          product_id: productId,
+        },
+        group: ['Order.Address.id','Order.Address.country'],
+        order: [['total_quantity', 'DESC']],
+        raw: true,
+      });
+    
+      return result;
+    } catch (error) {
+      console.error(error);
+      throw new Error('Internal Server Error');
+    }
+  };
   

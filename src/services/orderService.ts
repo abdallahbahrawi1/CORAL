@@ -127,8 +127,8 @@ export const updateOrderTotalAmount = async (newOrder: any, totalPrice: number, 
 };
 
 export const getOrderById = async (orderId: number, userID: number) => {
-
-  const order = await db.orders.findOne({
+  try{
+    const order = await db.orders.findOne({
       where: {
       id: orderId,
       user_id: userID,
@@ -139,10 +139,14 @@ export const getOrderById = async (orderId: number, userID: number) => {
     throw new Error(`order with ID ${orderId} not found.`);
   }
   return order;
-};
+  }
+  catch (error: any) {
+    throw new Error(`failed to get order with ID ${orderId}.: ${error.message}`)
+};}
 
 export const getOrdersByUserId = async (userID: number) => {
-  const order = await db.orders.findAll({
+  try{
+    const order = await db.orders.findAll({
       where: {
       user_id: userID,
       },
@@ -152,7 +156,11 @@ export const getOrdersByUserId = async (userID: number) => {
     throw new Error(`Cant find orders for user ID ${userID}.`);
   }
   return order;
-};
+}catch (error: any) {
+  throw new Error(`failed to get order`)
+};}
+  
+
 
 export const getOrderItems = async (orderId: number) => {
   try {

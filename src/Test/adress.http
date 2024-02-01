@@ -2,20 +2,20 @@
 GET http://localhost:3000/addresses
 Authorization:eafi0uispesac0o2wrqx
 ###
-GET http://localhost:3000/addresses/15
-Authorization:eafi0uispesac0o2wrqx
+GET http://localhost:3000/addresses/100
+Authorization:y06e3lmhet09xcguy8nj
 ###
 POST http://localhost:3000/addresses
 Content-Type: application/json
-Authorization:zG3vLifO2bXQHANGTiZNCdA43SZZDe
+Authorization:y06e3lmhet09xcguy8nj
 
 {
+  "full_name":"ddsad",
   "city": "jericho",
-    "phone": "555855258",
+    "phone": "5558552458",
     "street": "amman",
     "country": "defwf",
-    "user_id": 1,
-    "postal_code": 54433,
+    "postal_code": "54433",
     "address_line1": "FWefwf",
     "address_line2": "fewfwf"
 }

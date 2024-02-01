@@ -16,3 +16,20 @@ Authorization:fadi
 ###
 GET http://localhost:3000/admin/users?country=Italy
 Authorization:fadi
+
+
+### LOCALHOST
+PUT http://localhost:3000/admin/users
+Content-Type: application/json
+Authorization:fadi
+
+{   
+    "id":1,
+  "username": "kattt2fessejo",
+  "email": "wttttwf3e@example.com",
+  "password": "Mhttt&55r58r55",
+  "first_name": "John",
+  "last_name": "Dotte",
+  "mobile": "1234567890",
+  "birth_date": "1990-01-01"
+}

@@ -16,54 +16,8 @@ export const updateDiscount = async (discountId: number, updatedData: any) => {
   return discount;
 };
 
-export const deleteDiscount = async (discountId: number) => {
-  const discount = await db.discounts.findByPk(discountId);
 
-  if (!discount) {
-    throw new Error('Discount not found');
-  }
 
-  await discount.destroy();
-};
-
-// export const applyDiscount = async (discountId: number, productId?: number, categoryId?: number, brandId?: number) => {
-//   const discount = await db.discounts.findByPk(discountId);
-
-//   if (!discount) {
-//     throw new Error('Discount not found');
-//   }
-
-//   // If productId is provided, apply discount to a specific product
-//   if (productId) {
-//     const product = await db.products.findByPk(productId);
-
-//     if (!product) {
-//       throw new Error('Product not found');
-//     }
-
-//     await product.setDiscount(discount);
-//   }
-
-//   // If categoryId is provided, apply discount to all products in the category
-//   if (categoryId) {
-//     const productsInCategory = await db.products.findAll({
-//       where: { category_id: categoryId },
-//     });
-
-//     await Promise.all(productsInCategory.map(product => product.setDiscount(discount)));
-//   }
-
-//   // If brandId is provided, apply discount to all products in the brand
-//   if (brandId) {
-//     const productsInBrand = await db.products.findAll({
-//       where: { brand_id: brandId },
-//     });
-
-//     await Promise.all(productsInBrand.map(product => product.setDiscount(discount)));
-//   }
-
-//   return discount;
-// };
 export const applyDiscount = async (
     discountId: number,
     productId?: number,

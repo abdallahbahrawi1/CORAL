@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
         hooks: {
             beforeCreate: (session) => {
                 const minutesLater = new Date(session.createdAt);
-                minutesLater.setMinutes(minutesLater.getMinutes() + 60);
+                minutesLater.setMinutes(minutesLater.getMinutes() + 500);
                  session.expiry_date = minutesLater;
 
               },

@@ -52,7 +52,7 @@ const handleRequest = async (options: ProductQueryOptions,searchInput?:string) =
   try {
     const sortBy = options.sortBy || 'ratings';
     const sortOrder = commonSortOptions[sortBy] || commonSortOptions['ratings'];
-    const whereConditions: any = {}; // Define your additional where conditions here
+    const whereConditions: any = {}; 
     if (searchInput) {
       // Include both product name and brand name in the search conditions
       whereConditions[Op.or] = [

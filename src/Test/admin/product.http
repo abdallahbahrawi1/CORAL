@@ -32,3 +32,16 @@ Authorization:fadi
 }
 
 ###
+GET http://localhost:3000/admin/products/by-country
+Content-Type: application/json
+Authorization:fadi
+###
+GET http://localhost:3000/admin/products/by-country?country=Benin
+Content-Type: application/json
+Authorization:fadi
+
+
+###  
+GET http://localhost:3000/admin/products/757/top-country?status=cancelled
+Content-Type: application/json
+Authorization:fadi

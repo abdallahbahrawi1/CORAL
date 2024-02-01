@@ -4,6 +4,7 @@ Content-Type: application/json
 
 {
   "order_address": {
+    "full_name":"Sdsdsd",
     "city": "Berlin",
     "phone": "2595565892",
     "street": "stugt St",
@@ -15,8 +16,8 @@ Content-Type: application/json
   "payment_method": "Credit Card"
 }
 ###
-GET http://localhost:3000/orders/info/380
-Authorization: y06e3lmhet09xcguy8nj
+GET http://localhost:3000/orders/info/1000
+Authorization: 4rpvjk2krzslmysvegcp
 
 ###
 GET http://localhost:3000/orders
@@ -25,7 +26,7 @@ Authorization: y06e3lmhet09xcguy8nj
 
 
 POST http://localhost:3000/orders/reorder/156
-Authorization: zG3vLifO2bXQHANGTiZNCdA43SZZDe
+Authorization: 4rpvjk2krzslmysvegcp
 ###
 
 PUT http://localhost:3000/orders/156/cancel
