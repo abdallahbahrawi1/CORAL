@@ -12,10 +12,3 @@ export const updateBrand = async (brandId: number, updatedData: any) => {
   return await brand.update(updatedData);
 };
 
-export const deleteBrand = async (brandId: number) => {
-  const brand = await db.brands.findByPk(brandId);
-  if (!brand) {
-    throw new Error('Brand not found');
-  }
-  await brand.destroy();
-};

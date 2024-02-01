@@ -1,12 +1,10 @@
 import { Request, Response } from 'express';
 import * as orderService from '../../Services/admin/orderService'; 
 
+//This return all the total sales of a product , or all products belonging to brand or belonging to category , takes many filters for sorting ,status and date
 export const getOrderItemAnalytics = async (req: Request, res: Response) => {
   try {
     const { status, startDate, endDate, brandId, categoryId ,productId,sortBy} = req.query;
-
-    // Validate and parse query parameters as needed
-
     const options = {
       status: status ? String(status) : 'completed',
       startDate: startDate ? new Date(String(startDate)) : undefined,
@@ -27,13 +25,10 @@ export const getOrderItemAnalytics = async (req: Request, res: Response) => {
 };
 
 
-
+//this return total sales for each brand and takes many fiters
 export const getTotalByBrand = async (req: Request, res: Response) => {
   try {
     const { status, startDate, endDate, brandId,sortBy} = req.query;
-
-    // Validate and parse query parameters as needed
-
     const options = {
       status: status ? String(status) : 'completed',
       startDate: startDate ? new Date(String(startDate)) : undefined,
@@ -52,7 +47,7 @@ export const getTotalByBrand = async (req: Request, res: Response) => {
 };
 
 
-
+//this return total sales for each category and takes many fiters
 export const getTotalByCategory = async (req: Request, res: Response) => {
   try {
     const { status, startDate, endDate, categoryId,sortBy} = req.query;
@@ -76,13 +71,10 @@ export const getTotalByCategory = async (req: Request, res: Response) => {
   }
 };
 
-
+//This returns a Total of ALL Sales within a specfic period
 export const getTotalOrdersInPeriod = async (req: Request, res: Response) => {
   try {
     const { status, startDate, endDate} = req.query;
-
-    // Validate and parse query parameters as needed
-
     const options = {
       status: status ? String(status) : 'completed',
       startDate: startDate ? new Date(String(startDate)) : undefined,

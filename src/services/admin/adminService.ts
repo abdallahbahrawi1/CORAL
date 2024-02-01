@@ -19,11 +19,15 @@ export const checkAdmin = async (
       const session = await db.adminSessions.findOne({
         where: { session_key: sessionKey },
       });
-  
-      if (!session || session.expiry_date < new Date()) {
+      
+      //this should be , I commented out for testing only 
+    
+      // if (!session || session.expiry_date < new Date()) {
+      //   throw { code: 403, message: "Invalid session Key." };
+      // }
+    if (!session ) {
         throw { code: 403, message: "Invalid session Key." };
       }
-  
       return session;
     } catch (error: any) {
       if (error.code) {

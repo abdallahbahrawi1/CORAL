@@ -6,8 +6,6 @@ import {categorySchema,updateCategorySchema } from '../../Validators/admin/categ
 export const createCategory = async (req: Request, res: Response) => {
   try {
     const categoryData = req.body;
-
-    // Validate using Joi
     const { error } = categorySchema.validate(categoryData);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
@@ -25,8 +23,6 @@ export const updateCategory = async (req: Request, res: Response) => {
   try {
     const categoryId = parseInt(req.params.categoryId, 10);
     const updatedData = req.body;
-
-    // Validate using Joi
     const { error } = updateCategorySchema.validate(updatedData);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
@@ -40,13 +36,3 @@ export const updateCategory = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteCategory = async (req: Request, res: Response) => {
-  try {
-    const categoryId = parseInt(req.params.categoryId, 10);
-    await categoryService.deleteCategory(categoryId);
-    res.status(204).send();
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};

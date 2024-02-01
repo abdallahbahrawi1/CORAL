@@ -5,7 +5,6 @@ import {discountSchema,updateDiscountSchema } from '../../Validators/admin/disco
   
   export const createDiscount = async (req: Request, res: Response) => {
     try {
-      // Validate request body against the schema
       const { error, value } = discountSchema.validate(req.body);
   
       if (error) {
@@ -24,7 +23,6 @@ import {discountSchema,updateDiscountSchema } from '../../Validators/admin/disco
     try {
       const discountId = parseInt(req.params.discountId, 10);
   
-      // Validate request body against the schema
       const { error, value } = updateDiscountSchema.validate(req.body);
   
       if (error) {
@@ -39,17 +37,8 @@ import {discountSchema,updateDiscountSchema } from '../../Validators/admin/disco
     }
   };
 
-export const deleteDiscount = async (req: Request, res: Response) => {
-  try {
-    const discountId = parseInt(req.params.discountId, 10);
-    await discountService.deleteDiscount(discountId);
-    res.status(204).send();
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
 
+// This can apply a discount to a specfic product or brand or category
 export const applyDiscount = async (req: Request, res: Response) => {
   try {
     const discountId = parseInt(req.params.discountId, 10);

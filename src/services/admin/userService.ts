@@ -109,197 +109,21 @@ export const getUsers = async (filters: any) => {
     
       }
     };
-    interface FilterOptions {
-      id: number;
-      startDate: Date;
-      endDate: Date;
-    }
+
     
-   
-// interface UserQueryOptions {
-//   sortBy?: string;
-//   attributes?: string[];
-//   include?: any[];
-//   where?: any;
-//   searchInput?: string;
-// }
-
-// const commonUserAttributes = [
-//   'id',
-//   'email',
-//   'first_name',
-//   'last_name',
-//   'username',
-//   'birth_date',
-//   'createdAt',
-// ];
-
-// const commonAddressAttributes = [
-//   'id',
-//   'city',
-//   'street',
-//   'country',
-//   'postal_code',
-//   'address_line1',
-// ];
-
-// const commonInclude = [
-//   {
-//     model: db.addresses,
-//     attributes: commonAddressAttributes,
-//   },
-// ];
-
-// const commonSortOptions: Record<string, any> = {
-//   'id': [['id', 'ASC']],
-//   'birth-date': [['birth_date', 'ASC']],
-//   'latest': [['createdAt', 'DESC']],
-// };
-
-// export const getUsers = async (options: UserQueryOptions) => {
-//   try {
-//     const sortBy = options.sortBy || 'latest';
-//     const sortOrder = commonSortOptions[sortBy] || commonSortOptions['latest'];
-//     const whereConditions: any = {};
-
-//     if (options.searchInput) {
-//       whereConditions[Op.or] = [
-//         {
-//           email: {
-//             [Op.like]: `%${options.searchInput}%`,
-//           },
-//         },
-//         {
-//           username: {
-//             [Op.like]: `%${options.searchInput}%`,
-//           },
-//         },
-//         // Add more conditions as needed
-//       ];
-//     }
-
-//     const mergedWhereConditions = { ...options, ...whereConditions };
-
-//     const result = await db.users.findAll({
-//       subQuery: false,
-//       where: mergedWhereConditions,
-//       attributes: [...commonUserAttributes, ...(options.attributes || [])],
-//       include: [...commonInclude, ...(options.include || [])],
-//       order: sortOrder,
-//     });
-
-//     return {
-//       totalUsers: result.length as number,
-//       data: result,
-//     };
-//   } catch (error) {
-//     console.error(error);
-//     throw new Error('Internal Server Error');
-//   }
-// };
-
-
-
-// import db from '../../Database/Models/index'
-// export const getUsers = async (options: any) => {
-//     try {
-//       const queryOptions = {
-//         attributes: ['id', 'email', 'first_name', 'last_name', 'username', 'birth_date'],
-//         include: [
-//           {
-//             model: db.addresses,
-//             attributes: ['id', 'city', 'street', 'country', 'postal_code', 'address_line1'],
-//           },
-//         ],
-//         where: options,  // Use 'where' instead of spreading '...options'
-//       };
-  
-//       const users = Object.keys(options).length > 0
-//         ? await db.users.findAll(queryOptions)
-//         : await db.users.findAll();
-  
-//       return users;
-//     } catch (error) {
-//       throw new Error(`Error in getUsers: ${error.message}`);
-//     }
-//   };
-// // export const getUsers = async (options: any) => {
-// //     try {
-// //       const users = await db.users.findAll({
-// //         attributes: ['id', 'email', 'first_name', 'last_name', 'username', 'birth_date'],
-// //         include: [
-// //           {
-// //             model: db.addresses,
-// //             attributes: ['id', 'city', 'street', 'country', 'postal_code', 'address_line1'],
-// //           },
-// //         ],
-// //         ...options,
-// //       });
-  
-// //       return users;
-// //     } catch (error) {
-// //       throw new Error(`Error in getUsers: ${error.message}`);
-// //     }
-// //   };
-// // export const getUsers = async (options: any) => {
-// //     try {
-// //       const queryOptions = {
-// //         attributes: ['id', 'email', 'first_name', 'last_name', 'username', 'birth_date'],
-// //         include: [
-// //           {
-// //             model: db.addresses,
-// //             attributes: ['id', 'city', 'street', 'country', 'postal_code', 'address_line1'],
-// //           },
-// //         ],
-// //         ...options,
-// //       };
-  
-// //       const users = options ? await db.users.findAll(queryOptions) : await db.users.findAll();
-  
-// //       return users;
-// //     } catch (error) {
-// //       throw new Error(`Error in getUsers: ${error.message}`);
-// //     }
-// //   };
-// // export  const getAllUsers = async (
-// //   ): Promise<boolean | ErrorResponse> => {
-// //     try {
-// //       const users = await db.users.findAll();
-// //       return true;
-// //     } catch (error: any) {
-// //       if (error.code) {
-// //         throw { code: error.code, message: error.message };
-// //       } else {
-// //         throw { code: 500, message: "Internal Server Error" };
-// //       }
-// //     }}
-
-
-// // export const deleteUserAccount = async (
-// //     session: Session
-// //   ): Promise<boolean | ErrorResponse> => {
-// //     try {
-// //       const user = await db.users.destroy({ where: { id: session.user_id } });
-// //       return true;
-// //     } catch (error: any) {
-// //       if (error.code) {
-// //         throw { code: error.code, message: error.message };
-// //       } else {
-// //         throw { code: 500, message: "Internal Server Error" };
-// //       }
-// //     }}
-
-// // export const getUserDetails = async (
-// //   session: Session
-// // ): Promise<User | ErrorResponse> => {
-// //   try {
-// //     const user = await db.users.findOne({ where: { id: session.user_id } });
-// //     return user;
-// //   } catch (error: any) {
-// //     if (error.code) {
-// //       throw { code: error.code, message: error.message };
-// //     } else {
-// //       throw { code: 500, message: "Internal Server Error" };
-// //     }
-// //   }
-// // };
+export const updateUserDetails = async (input): Promise<boolean> => {
+      try {
+        const { first_name, last_name, mobile, birth_date } = input;
+        const user = await db.users.update(
+           input ,
+          { where: { id: input.id } }
+        );
+        return true;
+      } catch (error: any) {
+        if (error.code) {
+          throw { code: error.code, message: error.message };
+        } else {
+          throw { code: 500, message: "Internal Server Error" };
+        }
+      }
+    };

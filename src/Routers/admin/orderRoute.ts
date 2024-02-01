@@ -6,11 +6,7 @@ const router = express.Router();
 router.get('/brand', getTotalByBrand);
 router.get('/category', getTotalByCategory);
 router.get('/total', getTotalOrdersInPeriod);
-
 router.get('/', getOrderItemAnalytics);
-
-// router.put('/:productId', updateProduct);
-// router.delete('/:productId', deleteProduct);
 
 
 export default router;
